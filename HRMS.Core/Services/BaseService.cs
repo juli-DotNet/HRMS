@@ -5,12 +5,12 @@ namespace HRMS.Core.Services
 {
     public class BaseService
     {
-        protected Call HandleCall(Action method)
+        protected Response HandleResponse(Action method)
         {
             try
             {
                 method();
-                return new Call
+                return new Response
                 {
                     IsSuccessful = true
                 };
@@ -19,7 +19,7 @@ namespace HRMS.Core.Services
             catch (ApplicationException ex)
             {
                // Logger.Error(ex);
-                return new Call
+                return new Response
                 {
                     IsSuccessful = false,
                     Message = ex.Message,
@@ -29,7 +29,7 @@ namespace HRMS.Core.Services
             catch (ArgumentException ex)
             {
                // Logger.Error(ex);
-                return new Call
+                return new Response
                 {
                     IsSuccessful = false,
                     Message = ex.Message,
@@ -39,7 +39,7 @@ namespace HRMS.Core.Services
             catch (Exception ex)
             {
                // Logger.Error(ex);
-                return new Call
+                return new Response
                 {
                     IsSuccessful = false,
                     Message = "Ndodhi një problem në përpunimin e të dhënave. Ju lutem kontaktoni me administratorin!",
@@ -47,11 +47,11 @@ namespace HRMS.Core.Services
                 };
             }
         }
-        protected Call<T> HandleCall<T>(Func<T> method)
+        protected Response<T> HandleResponse<T>(Func<T> method)
         {
             try
             {
-                return new Call<T>
+                return new Response<T>
                 {
                     IsSuccessful = true,
                     Result = method()
@@ -62,7 +62,7 @@ namespace HRMS.Core.Services
             catch (ApplicationException ex)
             {
                // Logger.Error(ex);
-                return new Call<T>
+                return new Response<T>
                 {
                     IsSuccessful = false,
                     Message = ex.Message,
@@ -72,7 +72,7 @@ namespace HRMS.Core.Services
             catch (ArgumentException ex)
             {
                 //Logger.Error(ex);
-                return new Call<T>
+                return new Response<T>
                 {
                     IsSuccessful = false,
                     Message = ex.Message,
@@ -82,7 +82,7 @@ namespace HRMS.Core.Services
             catch (Exception ex)
             {
                // Logger.Error(ex);
-                return new Call<T>
+                return new Response<T>
                 {
                     IsSuccessful = false,
                     Message = "Ndodhi një problem në përpunimin e të dhënave. Ju lutem kontaktoni me administratorin!",
@@ -92,7 +92,7 @@ namespace HRMS.Core.Services
         }
 
         #region Unused
-        //protected Call HandleCall(Func<Call> method)
+        //protected Response HandleResponse(Func<Response> method)
         //{
         //    try
         //    {
@@ -102,7 +102,7 @@ namespace HRMS.Core.Services
         //    catch (ApplicationException ex)
         //    {
         //        Logger.Error(ex);
-        //        return new Call
+        //        return new Response
         //        {
         //            IsSuccessful = false,
         //            Message = ex.Message,
@@ -112,7 +112,7 @@ namespace HRMS.Core.Services
         //    catch (ArgumentException ex)
         //    {
         //        Logger.Error(ex);
-        //        return new Call
+        //        return new Response
         //        {
         //            IsSuccessful = false,
         //            Message = ex.Message,
@@ -122,7 +122,7 @@ namespace HRMS.Core.Services
         //    catch (Exception ex)
         //    {
         //        Logger.Error(ex);
-        //        return new Call
+        //        return new Response
         //        {
         //            IsSuccessful = false,
         //            Message =  "Ndodhi një problem në përpunimin e të dhënave. Ju lutem kontaktoni me administratorin!",
@@ -131,17 +131,17 @@ namespace HRMS.Core.Services
         //    }
         //}
 
-        //protected Call<T> HandleCall<T>(Func<T> method)
+        //protected Response<T> HandleResponse<T>(Func<T> method)
         //{
         //    try
         //    {
         //        var result = method();
-        //        return new Call<T> { Result = result, IsSuccessful = true };
+        //        return new Response<T> { Result = result, IsSuccessful = true };
         //    }
         //    catch (ServiceException ex)
         //    {
         //        Logger.Error(ex);
-        //        return new Call<T>
+        //        return new Response<T>
         //        {
         //            Result = default(T),
         //            IsSuccessful = false,
@@ -152,7 +152,7 @@ namespace HRMS.Core.Services
         //    catch (ApplicationException ex)
         //    {
         //        Logger.Error(ex);
-        //        return new Call<T>
+        //        return new Response<T>
         //        {
         //            Result = default(T),
         //            IsSuccessful = false,
@@ -163,7 +163,7 @@ namespace HRMS.Core.Services
         //    catch (ArgumentException ex)
         //    {
         //        Logger.Error(ex);
-        //        return new Call<T>
+        //        return new Response<T>
         //        {
         //            Result = default(T),
         //            IsSuccessful = false,
@@ -174,7 +174,7 @@ namespace HRMS.Core.Services
         //    catch (Exception ex)
         //    {
         //        Logger.Error(ex);
-        //        return new Call<T>
+        //        return new Response<T>
         //        {
         //            Result = default(T),
         //            IsSuccessful = false,
@@ -184,7 +184,7 @@ namespace HRMS.Core.Services
         //    }
         //}
 
-        //protected Call<T> HandleCall<T>(Func<Call<T>> method)
+        //protected Response<T> HandleResponse<T>(Func<Response<T>> method)
         //{
         //    try
         //    {
@@ -193,7 +193,7 @@ namespace HRMS.Core.Services
         //    catch (ApplicationException ex)
         //    {
         //        Logger.Error(ex);
-        //        return new Call<T>
+        //        return new Response<T>
         //        {
         //            Result = default(T),
         //            IsSuccessful = false,
@@ -204,7 +204,7 @@ namespace HRMS.Core.Services
         //    catch (ArgumentException ex)
         //    {
         //        Logger.Error(ex);
-        //        return new Call<T>
+        //        return new Response<T>
         //        {
         //            Result = default(T),
         //            IsSuccessful = false,
@@ -215,7 +215,7 @@ namespace HRMS.Core.Services
         //    catch (Exception ex)
         //    {
         //        Logger.Error(ex);
-        //        return new Call<T>
+        //        return new Response<T>
         //        {
         //            Result = default(T),
         //            IsSuccessful = false,

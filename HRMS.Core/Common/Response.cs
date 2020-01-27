@@ -4,17 +4,17 @@ using System.Text;
 
 namespace HRMS.Core.Common
 {
-    public class Call<T> : Call
+    public class Response<T> : Response
     {
-        public Call()
+        public Response()
         {
         }
         public T Result { get; set; }
     }
 
-    public class Call
+    public class Response
     {
-        public Call()
+        public Response()
         {
         }
         public bool IsSuccessful { get; set; }
