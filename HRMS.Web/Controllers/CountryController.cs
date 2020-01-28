@@ -26,6 +26,7 @@ namespace HRMS.Web.Controllers
                 Name = a.Name
             }));
         }
+
         public IActionResult Create()
         {
             var model = new CountryViewModel();
@@ -38,7 +39,8 @@ namespace HRMS.Web.Controllers
         {
             var toCreateModel = new Country
             {
-                Name = model.Name
+                Name = model.Name,
+                Code=model.Code
             };
             countryService.Create(toCreateModel);
             return RedirectToAction("Index");
@@ -50,7 +52,8 @@ namespace HRMS.Web.Controllers
             var model = countryService.GetById(id);
             return View(new CountryViewModel {
                 Id=id,
-                Name=model.Name
+                Name=model.Name,
+                Code=model.Code
             });
         }
 
@@ -60,7 +63,8 @@ namespace HRMS.Web.Controllers
             return View(new CountryViewModel
             {
                 Id = id,
-                Name = model.Name
+                Name = model.Name,
+                Code=model.Code
             });
         }
 
@@ -71,7 +75,8 @@ namespace HRMS.Web.Controllers
             var toUpdateModel = new Country
             {
                 Name = model.Name,
-                Id = model.Id
+                Id = model.Id,
+                Code=model.Code
             };
             countryService.Edit(toUpdateModel);
             return RedirectToAction("Index");

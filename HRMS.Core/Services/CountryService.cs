@@ -28,7 +28,7 @@ namespace HRMS.Core.Services
 
         public int Create(Country model)
         {
-            if (DoesCountryExist(model.Name))
+            if (DoesCountryExist(model.Code))
             {
                 return 0;//throw 
             }
@@ -42,6 +42,10 @@ namespace HRMS.Core.Services
 
         public void Edit(Country model)
         {
+            if (DoesCountryExist(model.Code))
+            {
+                return ;//throw 
+            }
             model.IsValid = true;
             model.ModifiedOn = DateTime.Now;
 
@@ -57,7 +61,7 @@ namespace HRMS.Core.Services
 
         bool DoesCountryExist(string name)
         {
-            if (work.Country.Any(a => a.Name.ToLower() == name.ToLower() && a.IsValid))
+            if (work.Country.Any(a => a.Code.ToLower() == name.ToLower() && a.IsValid))
             {
                 return true;
             }
