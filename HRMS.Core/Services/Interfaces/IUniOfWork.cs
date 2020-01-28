@@ -18,5 +18,4 @@ namespace HRMS.Core.Services.Interfaces
 
         void SaveChanges();
     }
-
 }
