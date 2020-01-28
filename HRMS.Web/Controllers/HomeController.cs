@@ -5,13 +5,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using HRMS.Web.Models;
+using HRMS.Core.Services.Interfaces;
 
 namespace HRMS.Web.Controllers
 {
     public class HomeController : Controller
     {
+        public readonly IUniOfWork _work;
+
+        public HomeController(IUniOfWork work)
+        {
+            _work = work;
+        }
         public IActionResult Index()
         {
+            var list = _work.Country.GetAll();
+
+            var l = _work.Region.GetAll();
             return View();
         }
 

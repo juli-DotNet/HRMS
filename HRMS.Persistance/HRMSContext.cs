@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace HRMS.Persistance
 {
-    public class HRMSContext : DbContext, IHRMSContext
+    public class HRMSContext : DbContext
     {
         public HRMSContext(DbContextOptions<HRMSContext> options)
             : base(options)

@@ -14,6 +14,7 @@ using HRMS.Web.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using HRMS.Core.Services.Interfaces;
+using HRMS.Persistance;
 
 namespace HRMS.Web
 {
@@ -41,7 +42,7 @@ namespace HRMS.Web
                    Configuration.GetConnectionString("DefaultConnection"),
                     x => x.MigrationsAssembly("HRMS.Persistance")
                    ));
-            
+
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(
             //        Configuration.GetConnectionString("DefaultConnection")));
@@ -50,6 +51,16 @@ namespace HRMS.Web
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            RegisterCustomServices(services);
+        }
+
+        private void RegisterCustomServices(IServiceCollection services)
+        {
+            //services.AddTransient<IUniOfWork, UnitOfWork>();
+            //services.AddSingleton<IUniOfWork, UnitOfWork>();
+            //services.AddScoped<IUniOfWork, UnitOfWork>();
+            services.AddScoped<IUniOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

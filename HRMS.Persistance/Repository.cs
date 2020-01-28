@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace HRMS.Persistance
 {
-    public class Repository<T> : IRepository<T>, IDisposable where T : class
+    public class Repository<T> : IRepository<T> where T : class
     {
         private readonly HRMSContext db;
         private DbSet<T> dbSet;
@@ -43,14 +43,7 @@ namespace HRMS.Persistance
         {
             db.SaveChanges();
         }
-        public void Dispose()
-        {
-            if (this.db != null)
-            {
-                this.db.Dispose();
-                this.db = null;
-            }
-        }
+        
         public bool Any(Expression<Func<T, bool>> predicate)
         {
             return this.dbSet.Any(predicate);
