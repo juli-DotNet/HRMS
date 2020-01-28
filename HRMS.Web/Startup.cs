@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using HRMS.Web.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using HRMS.Core.Services.Interfaces;
 
 namespace HRMS.Web
 {
@@ -35,9 +36,15 @@ namespace HRMS.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<HRMS.Persistance.HRMSContext>(options =>
+               options.UseSqlServer(
+                   Configuration.GetConnectionString("DefaultConnection"),
+                    x => x.MigrationsAssembly("HRMS.Persistance")
+                   ));
+            
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
