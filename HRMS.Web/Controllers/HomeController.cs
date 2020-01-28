@@ -19,9 +19,6 @@ namespace HRMS.Web.Controllers
         }
         public IActionResult Index()
         {
-            var list = _work.Country.GetAll();
-
-            var l = _work.Region.GetAll();
             return View();
         }
 

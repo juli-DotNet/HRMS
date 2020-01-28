@@ -9,7 +9,9 @@ namespace HRMS.Persistance
     {
         public HRMSContext(DbContextOptions<HRMSContext> options)
             : base(options)
-        { }
+        {
+          
+        }
         public HRMSContext()
         {
 
@@ -26,6 +28,10 @@ namespace HRMS.Persistance
         public DbSet<Region> Region { get; set; }
         public DbSet<Site> Site { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies(false);
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
