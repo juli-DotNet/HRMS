@@ -1,4 +1,5 @@
-﻿using HRMS.Core.Model;
+﻿using HRMS.Core.Common;
+using HRMS.Core.Model;
 using HRMS.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -17,46 +18,110 @@ namespace HRMS.Core.Services
             this.work = work;
         }
 
-        public List<Country> GetAll()
+        public Response<IEnumerable<Country>> GetAll()
         {
-            return work.Country.GetAll();
-        }
-        public Country GetById(int id)
-        {
-            return work.Country.GetById(id);
-        }
-
-        public int Create(Country model)
-        {
-            if (DoesCountryExist(model.Code))
+            var result = new Response<IEnumerable<Country>>();
+            try
             {
-                return 0;//throw 
+                result.Result = work.Country.GetAll();
+                result.IsSuccessful = true;
             }
-            model.CreatedOn = DateTime.Now;
-            model.IsValid = true;
-            work.Country.Insert(model);
-            work.SaveChanges();
-            var country = work.Country.Where(a => a.Name == model.Name && a.IsValid).FirstOrDefault();
-            return country.Id;
-        }
-
-        public void Edit(Country model)
-        {
-            if (DoesCountryExist(model.Code))
+            catch (Exception ex)
             {
-                return ;//throw 
+                result.Exception = ex;
+                result.IsSuccessful = false;
             }
-            model.IsValid = true;
-            model.ModifiedOn = DateTime.Now;
-
-            work.Country.Update(model);
-            work.SaveChanges();
+            return result;
         }
-        public void Delete(int id)
+        public Response<Country> GetById(int id)
         {
-            var country = work.Country.GetById(id);
-            country.IsValid = false;
-            work.SaveChanges();
+            var result = new Response<Country>();
+            try
+            {
+                result.Result = work.Country.GetById(id);
+                result.IsSuccessful = true;
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+
+            return result;
+        }
+
+        public Response<int> Create(Country model)
+        {
+            var result = new Response<int>();
+            try
+            {
+                if (DoesCountryExist(model.Code))
+                {
+                    throw new Exception();
+                }
+                model.CreatedOn = DateTime.Now;
+                model.IsValid = true;
+                work.Country.Insert(model);
+                work.SaveChanges();
+                var country = work.Country.Where(a => a.Name == model.Name && a.IsValid).FirstOrDefault();
+
+                result.Result = country.Id;
+                result.IsSuccessful = true;
+
+            }
+            catch (Exception ex)
+            {
+
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
+
+        }
+
+        public Response Edit(Country model)
+        {
+            var result = new Response();
+            try
+            {
+                if (DoesCountryExist(model.Code))
+                {
+                    throw new Exception();
+                }
+                model.IsValid = true;
+                model.ModifiedOn = DateTime.Now;
+
+                work.Country.Update(model);
+                work.SaveChanges();
+                result.IsSuccessful = true;
+            }
+            catch (Exception ex)
+            {
+
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
+
+        }
+
+        public Response Delete(int id)
+        {
+            var result = new Response { IsSuccessful = true };
+            try
+            {
+                var country = work.Country.GetById(id);
+                country.IsValid = false;
+                work.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
+
         }
 
         bool DoesCountryExist(string name)

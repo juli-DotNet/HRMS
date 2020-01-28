@@ -20,10 +20,11 @@ namespace HRMS.Web.Controllers
         public IActionResult Index()
         {
             var list = countryService.GetAll();
-            return View(list.Select(a => new CountryViewModel
+            return View(list.Result.Select(a => new CountryViewModel
             {
                 Id = a.Id,
-                Name = a.Name
+                Name = a.Name,
+                Code=a.Code
             }));
         }
 
@@ -49,7 +50,7 @@ namespace HRMS.Web.Controllers
 
         public IActionResult Edit(int id)
         {
-            var model = countryService.GetById(id);
+            var model = countryService.GetById(id).Result;
             return View(new CountryViewModel {
                 Id=id,
                 Name=model.Name,
@@ -59,7 +60,7 @@ namespace HRMS.Web.Controllers
 
         public IActionResult Details(int id)
         {
-            var model = countryService.GetById(id);
+            var model = countryService.GetById(id).Result;
             return View(new CountryViewModel
             {
                 Id = id,
