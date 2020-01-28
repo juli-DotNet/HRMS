@@ -1,5 +1,6 @@
 ﻿using HRMS.Core.Model;
 using HRMS.Core.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,8 @@ namespace HRMS.Core.Services
             {
                 return 0;//throw 
             }
+            model.CreatedOn = DateTime.Now;
+            model.IsValid = true;
             work.Country.Insert(model);
             work.SaveChanges();
             var country = work.Country.Where(a => a.Name == model.Name && a.IsValid).FirstOrDefault();
@@ -39,6 +42,9 @@ namespace HRMS.Core.Services
 
         public void Edit(Country model)
         {
+            model.IsValid = true;
+            model.ModifiedOn = DateTime.Now;
+
             work.Country.Update(model);
             work.SaveChanges();
         }
