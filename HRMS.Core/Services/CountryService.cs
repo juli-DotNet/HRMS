@@ -19,9 +19,9 @@ namespace HRMS.Core.Services
         }
 
 
-        async Task<bool> DoesCountryExistAsync(string code)
+        async Task<bool> DoesCountryExistAsync(string code, int? id)
         {
-            var result = await work.Country.AnyAsync(a => a.Code.ToLower() == code.ToLower() && a.IsValid);
+            var result = id.HasValue ? await work.Country.AnyAsync(a => a.Code.ToLower() == code.ToLower() && a.IsValid && a.Id != id) : await work.Country.AnyAsync(a => a.Code.ToLower() == code.ToLower() && a.IsValid);
             return result;
         }
 
@@ -30,7 +30,7 @@ namespace HRMS.Core.Services
             var result = new Response<int>() { IsSuccessful = true };
             try
             {
-                if (await DoesCountryExistAsync(model.Code))
+                if (await DoesCountryExistAsync(model.Code, null))
                 {
                     throw new Exception("Country already exists");
                 }
@@ -60,11 +60,19 @@ namespace HRMS.Core.Services
             var result = new Response { IsSuccessful = true };
             try
             {
-                if (await DoesCountryExistAsync(model.Code))
+                if (await DoesCountryExistAsync(model.Code, model.Id))
                 {
                     throw new Exception("Country already exists");
                 }
-                await work.Country.UpdateAsync(model);
+
+                var currentEntity = await work.Country.GetByIdAsync(model.Id);
+                if (currentEntity == null)
+                {
+                    throw new Exception("Country cant be saved");
+                }
+                currentEntity.Code = model.Code;
+                currentEntity.Name = model.Name;
+                await work.Country.UpdateAsync(currentEntity);
                 await work.SaveChangesAsync();
             }
             catch (Exception ex)

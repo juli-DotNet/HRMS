@@ -17,9 +17,10 @@ namespace HRMS.Core.Services
             this.work = work;
         }
 
-        async Task<bool> DoesCityExistAsync(string code)
+        async Task<bool> DoesCityExistAsync(string code, int? id)
         {
-            var result = await work.City.AnyAsync(a => a.Name.ToLower() == code.ToLower() && a.IsValid);
+            var result = id.HasValue ? await work.City.AnyAsync(a => a.Name.ToLower() == code.ToLower() && a.IsValid && a.Id != id)
+                : await work.City.AnyAsync(a => a.Name.ToLower() == code.ToLower() && a.IsValid);
             return result;
         }
 
@@ -28,7 +29,7 @@ namespace HRMS.Core.Services
             var result = new Response<int>() { IsSuccessful = true };
             try
             {
-                if (await DoesCityExistAsync(model.Name))
+                if (await DoesCityExistAsync(model.Name,null))
                 {
                     throw new Exception("Region already exists");
                 }
@@ -66,7 +67,7 @@ namespace HRMS.Core.Services
             var result = new Response { IsSuccessful = true };
             try
             {
-                if (await DoesCityExistAsync(model.Name))
+                if (await DoesCityExistAsync(model.Name,model.Id))
                 {
                     throw new Exception("Region already exists");
                 }
@@ -79,8 +80,16 @@ namespace HRMS.Core.Services
                 {
                     throw new Exception("Region cant be emty");
                 }
-
-                await work.City.UpdateAsync(model);
+                var currentEntity = await work.City.GetByIdAsync(model.Id);
+                if (currentEntity == null)
+                {
+                    throw new Exception("City cant be saved");
+                }
+                currentEntity.Name = model.Name;
+                currentEntity.CountryId = model.CountryId;
+                currentEntity.RegionId = model.RegionId;
+               
+                await work.City.UpdateAsync(currentEntity);
                 await work.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -144,7 +153,7 @@ namespace HRMS.Core.Services
             var result = new Response<City> { IsSuccessful = true };
             try
             {
-                result.Result = await work.Region.GetByIdAsync(id);
+                result.Result = await work.City.GetByIdAsync(id);
             }
             catch (Exception ex)
             {

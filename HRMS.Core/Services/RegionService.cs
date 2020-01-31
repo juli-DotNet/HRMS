@@ -16,9 +16,10 @@ namespace HRMS.Core.Services
         {
             this.work = work;
         }
-        async Task<bool> DoesRegionExistAsync(string code)
+        async Task<bool> DoesRegionExistAsync(string code, int? id)
         {
-            var result = await work.Region.AnyAsync(a => a.Name.ToLower() == code.ToLower() && a.IsValid);
+            var result = id.HasValue ? await work.Region.AnyAsync(a => a.Name.ToLower() == code.ToLower() && a.IsValid && a.Id != id) :
+                await work.Region.AnyAsync(a => a.Name.ToLower() == code.ToLower() && a.IsValid);
             return result;
         }
 
@@ -27,7 +28,7 @@ namespace HRMS.Core.Services
             var result = new Response<int>() { IsSuccessful = true };
             try
             {
-                if (await DoesRegionExistAsync(model.Name))
+                if (await DoesRegionExistAsync(model.Name, null))
                 {
                     throw new Exception("Region already exists");
                 }
@@ -60,7 +61,7 @@ namespace HRMS.Core.Services
             var result = new Response { IsSuccessful = true };
             try
             {
-                if (await DoesRegionExistAsync(model.Name))
+                if (await DoesRegionExistAsync(model.Name, model.Id))
                 {
                     throw new Exception("Region already exists");
                 }
@@ -69,8 +70,15 @@ namespace HRMS.Core.Services
                 {
                     throw new Exception("Country cant be emty");
                 }
+                var currentEntity = await work.Region.GetByIdAsync(model.Id);
+                if (currentEntity == null)
+                {
+                    throw new Exception("region cant be saved");
+                }
+                currentEntity.Name = model.Name;
+                currentEntity.CountryId = model.CountryId;
 
-                await work.Region.UpdateAsync(model);
+                await work.Region.UpdateAsync(currentEntity);
                 await work.SaveChangesAsync();
             }
             catch (Exception ex)

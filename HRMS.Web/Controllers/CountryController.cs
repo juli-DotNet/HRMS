@@ -17,14 +17,18 @@ namespace HRMS.Web.Controllers
         {
             this.countryService = countryService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var list = countryService.GetAll();
-            return View(list.Result.Select(a => new CountryViewModel
+            var result = await countryService.GetAllAsync();
+            if (!result.IsSuccessful)
+            {
+                ModelState.AddModelError("", result.Message);
+            }
+            return View(result.Result.Select(a => new CountryViewModel
             {
                 Id = a.Id,
                 Name = a.Name,
-                Code=a.Code
+                Code = a.Code
             }));
         }
 
@@ -36,60 +40,88 @@ namespace HRMS.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CountryViewModel model)
+        public async Task<IActionResult> Create(CountryViewModel model)
         {
             var toCreateModel = new Country
             {
                 Name = model.Name,
-                Code=model.Code
+                Code = model.Code
             };
-            countryService.Create(toCreateModel);
+            var result = await countryService.CreateAsync(toCreateModel);
+            if (!result.IsSuccessful)
+            {
+                ModelState.AddModelError("", result.Message);
+                return View(model);
+            }
+
             return RedirectToAction("Index");
         }
 
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var model = countryService.GetById(id).Result;
-            return View(new CountryViewModel {
-                Id=id,
-                Name=model.Name,
-                Code=model.Code
-            });
-        }
+            var result = await countryService.GetByIdAsync(id);
 
-        public IActionResult Details(int id)
-        {
-            var model = countryService.GetById(id).Result;
+            if (!result.IsSuccessful)
+            {
+                ModelState.AddModelError("", result.Message);
+                return View(new CountryViewModel());
+            }
+
             return View(new CountryViewModel
             {
                 Id = id,
-                Name = model.Name,
-                Code=model.Code
+                Name = result.Result.Name,
+                Code = result.Result.Code
             });
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(CountryViewModel model)
+        public async Task<IActionResult> Edit(CountryViewModel model)
         {
             var toUpdateModel = new Country
             {
                 Name = model.Name,
                 Id = model.Id,
-                Code=model.Code
+                Code = model.Code
             };
-            countryService.Edit(toUpdateModel);
+            var result = await countryService.EditAsync(toUpdateModel);
+            if (!result.IsSuccessful)
+            {
+                ModelState.AddModelError("", result.Message);
+                return View(model);
+
+            }
             return RedirectToAction("Index");
         }
 
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Details(int id)
+        {
+            var response = await countryService.GetByIdAsync(id);
+
+            if (!response.IsSuccessful)
+            {
+                ModelState.AddModelError("", response.Message);
+                return View(new CountryViewModel());
+            }
+            return View(new CountryViewModel
+            {
+                Id = id,
+                Name = response.Result.Name,
+                Code = response.Result.Code
+            });
+        }
+
+
+
+        public async Task<IActionResult> Delete(int id)
         {
 
-            countryService.Delete(id);
+            var response = await countryService.DeleteAsync(id);
             return Json(new GenericViewModel
             {
-                IsSuccessful = true
+                IsSuccessful = response.IsSuccessful,
+                ErrorMessage = response.Message
             });
         }
 
