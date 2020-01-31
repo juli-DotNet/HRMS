@@ -38,6 +38,10 @@ namespace HRMS.Persistance
         {
             return this.dbSet.Where(predicate);
         }
+        public async Task<List<T>> WhereAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await this.dbSet.Where(predicate).ToListAsync();
+        }
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
         {
             return await this.dbSet.AnyAsync(predicate);

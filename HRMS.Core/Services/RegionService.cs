@@ -3,6 +3,7 @@ using HRMS.Core.Model;
 using HRMS.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HRMS.Core.Services
 {
@@ -14,38 +15,28 @@ namespace HRMS.Core.Services
         {
             this.work = work;
         }
-        public Response<int> Create(Region model)
+
+        public Task<Response<int>> CreateAsync(Region model)
         {
             throw new NotImplementedException();
         }
 
-        public Response Delete(int id)
+        public Task<Response> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Response Edit(Region model)
+        public Task<Response> EditAsync(Region model)
         {
             throw new NotImplementedException();
         }
 
-        public Response<IEnumerable<Region>> GetAll(int? counryId)
+        public Task<Response<IEnumerable<Region>>> GetAllAsync(int? counryId)
         {
-            var result = new Response<IEnumerable<Region>>();
-            //try
-            //{
-            //    result.Result = counryId.HasValue ?work.Region.Where(a=>a.IsValid&&a.CountryId==counryId) :work.Country.GetAll();
-            //    result.IsSuccessful = true;
-            //}
-            //catch (Exception ex)
-            //{
-            //    result.Exception = ex;
-            //    result.IsSuccessful = false;
-            //}
-            return result;
+            throw new NotImplementedException();
         }
 
-        public Response<Region> GetById(int id)
+        public Task<Response<Region>> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }

@@ -3,32 +3,33 @@ using HRMS.Core.Model;
 using HRMS.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HRMS.Core.Services
 {
     public class CityService : BaseService, ICityService
     {
-        public Response<int> Create(Region model)
+        public Task<Response<int>> CreateAsync(Region model)
         {
             throw new NotImplementedException();
         }
 
-        public Response Delete(int id)
+        public Task<Response> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Response Edit(Region model)
+        public Task<Response> EditAsync(Region model)
         {
             throw new NotImplementedException();
         }
 
-        public Response<IEnumerable<Region>> GetAll(int? counryId, int? regionId)
+        public Task<Response<IEnumerable<Region>>> GetAllAsync(int? counryId, int? regionId)
         {
             throw new NotImplementedException();
         }
 
-        public Response<Region> GetById(int id)
+        public Task<Response<Region>> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }

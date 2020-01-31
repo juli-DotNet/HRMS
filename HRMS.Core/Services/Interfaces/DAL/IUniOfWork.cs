@@ -1,5 +1,6 @@
 ﻿using HRMS.Core.Model;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace HRMS.Core.Services.Interfaces
 {
@@ -16,6 +17,6 @@ namespace HRMS.Core.Services.Interfaces
         IRepository<Region> Region { get;  }
         IRepository<Site> Site { get;  }
 
-        void SaveChanges();
+        Task SaveChangesAsync();
     }
 }

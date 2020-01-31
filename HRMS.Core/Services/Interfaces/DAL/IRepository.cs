@@ -16,5 +16,6 @@ namespace HRMS.Core.Services.Interfaces
         Task SaveAsync();
         IQueryable<T> Where(Expression<Func<T, bool>> predicate);
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
+        Task<List<T>> WhereAsync(Expression<Func<T, bool>> predicate);
     }
 }

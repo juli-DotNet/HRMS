@@ -18,56 +18,33 @@ namespace HRMS.Core.Services
             this.work = work;
         }
 
-        public Response<IEnumerable<Country>> GetAll()
-        {
-            var result = new Response<IEnumerable<Country>>();
-            try
-            {
-                //result.Result = work.Country.GetAll();
-                //result.IsSuccessful = true;
-            }
-            catch (Exception ex)
-            {
-                result.Exception = ex;
-                result.IsSuccessful = false;
-            }
-            return result;
-        }
-        public Response<Country> GetById(int id)
-        {
-            var result = new Response<Country>();
-            try
-            {
-                //result.Result = work.Country.GetById(id);
-                //result.IsSuccessful = true;
-            }
-            catch (Exception ex)
-            {
-                result.Exception = ex;
-                result.IsSuccessful = false;
-            }
 
+        async Task<bool> DoesCountryExistAsync(string code)
+        {
+            var result = await work.Country.AnyAsync(a => a.Code.ToLower() == code.ToLower() && a.IsValid);
             return result;
         }
 
-        public Response<int> Create(Country model)
+        public async Task<Response<int>> CreateAsync(Country model)
         {
-            var result = new Response<int>();
+            var result = new Response<int>() { IsSuccessful = true };
             try
             {
-                //if (DoesCountryExist(model.Code))
-                //{
-                //    throw new Exception();
-                //}
-                //model.CreatedOn = DateTime.Now;
-                //model.IsValid = true;
-                //work.Country.Insert(model);
-                //work.SaveChanges();
-                //var country = work.Country.Where(a => a.Name == model.Name && a.IsValid).FirstOrDefault();
+                if (await DoesCountryExistAsync(model.Code))
+                {
+                    throw new Exception("Country already exists");
+                }
 
-                //result.Result = country.Id;
-                //result.IsSuccessful = true;
+                await work.Country.InsertAsync(model);
+                await work.SaveChangesAsync();
 
+                var country = work.Country.Where(a => a.Code == model.Code && a.IsValid).FirstOrDefault();
+
+                if (country == null)
+                {
+                    throw new Exception("Country wasnt saved correctly");
+                }
+                result.Result = country.Id;
             }
             catch (Exception ex)
             {
@@ -76,43 +53,19 @@ namespace HRMS.Core.Services
                 result.IsSuccessful = false;
             }
             return result;
-
         }
 
-        public Response Edit(Country model)
-        {
-            var result = new Response();
-            try
-            {
-                //if (DoesCountryExist(model.Code))
-                //{
-                //    throw new Exception();
-                //}
-                //model.IsValid = true;
-                //model.ModifiedOn = DateTime.Now;
-
-                //work.Country.Update(model);
-                //work.SaveChanges();
-                //result.IsSuccessful = true;
-            }
-            catch (Exception ex)
-            {
-
-                result.Exception = ex;
-                result.IsSuccessful = false;
-            }
-            return result;
-
-        }
-
-        public Response Delete(int id)
+        public async Task<Response> EditAsync(Country model)
         {
             var result = new Response { IsSuccessful = true };
             try
             {
-                //var country = work.Country.GetById(id);
-                //country.IsValid = false;
-                //work.SaveChanges();
+                if (await DoesCountryExistAsync(model.Code))
+                {
+                    throw new Exception("Country already exists");
+                }
+                await work.Country.UpdateAsync(model);
+                await work.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -121,16 +74,53 @@ namespace HRMS.Core.Services
                 result.IsSuccessful = false;
             }
             return result;
+        }
+        public async Task<Response> DeleteAsync(int id)
+        {
+            var result = new Response { IsSuccessful = true };
+            try
+            {
+                var country = await work.Country.GetByIdAsync(id);
+                country.IsValid = false;
+                await work.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
 
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
         }
 
-        bool DoesCountryExist(string name)
+        public async Task<Response<IEnumerable<Country>>> GetAllAsync()
         {
-            //if (work.Country.Any(a => a.Code.ToLower() == name.ToLower() && a.IsValid))
-            //{
-            //    return true;
-            //}
-            return false;
+            var result = new Response<IEnumerable<Country>> { IsSuccessful = true };
+            try
+            {
+                result.Result = await work.Country.WhereAsync(a => a.IsValid);
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
+        }
+
+        public async Task<Response<Country>> GetByIdAsync(int id)
+        {
+            var result = new Response<Country> { IsSuccessful = true };
+            try
+            {
+                result.Result = await work.Country.GetByIdAsync(id);
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
         }
     }
 }

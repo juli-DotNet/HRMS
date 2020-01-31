@@ -1,5 +1,6 @@
 ﻿using HRMS.Core.Model;
 using HRMS.Core.Services.Interfaces;
+using System.Threading.Tasks;
 
 namespace HRMS.Persistance
 {
@@ -31,9 +32,9 @@ namespace HRMS.Persistance
 
         public IRepository<Site> Site => new Repository<Site>(_context);
 
-        public void SaveChanges()
+        public async Task SaveChangesAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }
