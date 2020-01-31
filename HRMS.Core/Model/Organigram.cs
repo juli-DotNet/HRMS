@@ -1,6 +1,6 @@
 ﻿namespace HRMS.Core.Model
 {
-    public class Organigram : BaseEntity
+    public class Organigram : GuidBaseEntity
     {
         public string Name { get; set; }
         public bool IsCeo { get; set; }

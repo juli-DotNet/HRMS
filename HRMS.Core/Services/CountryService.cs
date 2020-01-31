@@ -23,8 +23,8 @@ namespace HRMS.Core.Services
             var result = new Response<IEnumerable<Country>>();
             try
             {
-                result.Result = work.Country.GetAll();
-                result.IsSuccessful = true;
+                //result.Result = work.Country.GetAll();
+                //result.IsSuccessful = true;
             }
             catch (Exception ex)
             {
@@ -38,8 +38,8 @@ namespace HRMS.Core.Services
             var result = new Response<Country>();
             try
             {
-                result.Result = work.Country.GetById(id);
-                result.IsSuccessful = true;
+                //result.Result = work.Country.GetById(id);
+                //result.IsSuccessful = true;
             }
             catch (Exception ex)
             {
@@ -55,18 +55,18 @@ namespace HRMS.Core.Services
             var result = new Response<int>();
             try
             {
-                if (DoesCountryExist(model.Code))
-                {
-                    throw new Exception();
-                }
-                model.CreatedOn = DateTime.Now;
-                model.IsValid = true;
-                work.Country.Insert(model);
-                work.SaveChanges();
-                var country = work.Country.Where(a => a.Name == model.Name && a.IsValid).FirstOrDefault();
+                //if (DoesCountryExist(model.Code))
+                //{
+                //    throw new Exception();
+                //}
+                //model.CreatedOn = DateTime.Now;
+                //model.IsValid = true;
+                //work.Country.Insert(model);
+                //work.SaveChanges();
+                //var country = work.Country.Where(a => a.Name == model.Name && a.IsValid).FirstOrDefault();
 
-                result.Result = country.Id;
-                result.IsSuccessful = true;
+                //result.Result = country.Id;
+                //result.IsSuccessful = true;
 
             }
             catch (Exception ex)
@@ -84,16 +84,16 @@ namespace HRMS.Core.Services
             var result = new Response();
             try
             {
-                if (DoesCountryExist(model.Code))
-                {
-                    throw new Exception();
-                }
-                model.IsValid = true;
-                model.ModifiedOn = DateTime.Now;
+                //if (DoesCountryExist(model.Code))
+                //{
+                //    throw new Exception();
+                //}
+                //model.IsValid = true;
+                //model.ModifiedOn = DateTime.Now;
 
-                work.Country.Update(model);
-                work.SaveChanges();
-                result.IsSuccessful = true;
+                //work.Country.Update(model);
+                //work.SaveChanges();
+                //result.IsSuccessful = true;
             }
             catch (Exception ex)
             {
@@ -110,9 +110,9 @@ namespace HRMS.Core.Services
             var result = new Response { IsSuccessful = true };
             try
             {
-                var country = work.Country.GetById(id);
-                country.IsValid = false;
-                work.SaveChanges();
+                //var country = work.Country.GetById(id);
+                //country.IsValid = false;
+                //work.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -126,10 +126,10 @@ namespace HRMS.Core.Services
 
         bool DoesCountryExist(string name)
         {
-            if (work.Country.Any(a => a.Code.ToLower() == name.ToLower() && a.IsValid))
-            {
-                return true;
-            }
+            //if (work.Country.Any(a => a.Code.ToLower() == name.ToLower() && a.IsValid))
+            //{
+            //    return true;
+            //}
             return false;
         }
     }

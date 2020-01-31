@@ -2,7 +2,7 @@
 
 namespace HRMS.Core.Model
 {
-    public class Employee : BaseEntity
+    public class Employee : GuidBaseEntity
     {
         public string Name { get; set; }
         public string LastName { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace HRMS.Core.Model
 {
-    public class Address : BaseEntity
+    public class Address : GuidBaseEntity
     {
         public string StreetName { get; set; }
         public string PostalCode { get; set; }

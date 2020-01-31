@@ -2,7 +2,7 @@
 
 namespace HRMS.Core.Model
 {
-    public class OrganigramEmployee : BaseEntity
+    public class OrganigramEmployee : GuidBaseEntity
     {
         public Guid OrganigramId { get; set; }
         public virtual Organigram Organigram { get; set; }

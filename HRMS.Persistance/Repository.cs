@@ -1,13 +1,15 @@
-﻿using HRMS.Core.Services.Interfaces;
+﻿using HRMS.Core.Model;
+using HRMS.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace HRMS.Persistance
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly HRMSContext db;
         private DbSet<T> dbSet;
@@ -18,39 +20,43 @@ namespace HRMS.Persistance
             dbSet = db.Set<T>();
         }
 
-        public List<T> GetAll()
+        public async Task<List<T>> GetAllAsync()
         {
-            return dbSet.ToList();
+            return await dbSet.ToListAsync();
         }
-        public T GetById(object id)
+        public async Task<T> GetByIdAsync(object id)
         {
-            return dbSet.Find(id);
+            return await dbSet.FindAsync(id);
         }
-        public void Insert(T obj)
+        public async Task InsertAsync(T obj)
         {
-            dbSet.Add(obj);
-        }
-        public void Update(T obj)
-        {
-            db.Entry(obj).State = EntityState.Modified;
-        }
-        public void Delete(object id)
-        {
-            T getObjById = dbSet.Find(id);
-            dbSet.Remove(getObjById);
-        }
-        public void Save()
-        {
-            db.SaveChanges();
-        }
-        
-        public bool Any(Expression<Func<T, bool>> predicate)
-        {
-            return this.dbSet.Any(predicate);
+            obj.CreatedOn = DateTime.Now;
+            obj.IsValid = true;
+             await dbSet.AddAsync(obj);
         }
         public IQueryable<T> Where(Expression<Func<T, bool>> predicate)
         {
             return this.dbSet.Where(predicate);
+        }
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await this.dbSet.AnyAsync(predicate);
+        }
+        public async Task SaveAsync()
+        {
+            await db.SaveChangesAsync();
+        }
+        public async Task DeleteAsync(object id)
+        {
+            T getObjById = await dbSet.FindAsync(id);
+            dbSet.Remove(getObjById);
+        }
+        public Task UpdateAsync(T obj)
+        {
+            obj.ModifiedOn = DateTime.Now;
+            obj.IsValid = true;
+            db.Entry(obj).State = EntityState.Modified;
+            return Task.CompletedTask;
         }
     }
 }

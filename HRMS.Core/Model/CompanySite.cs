@@ -2,7 +2,7 @@
 
 namespace HRMS.Core.Model
 {
-    public class CompanySite : BaseEntity
+    public class CompanySite : GuidBaseEntity
     {
         public Guid SiteId { get; set; }
         public Guid CompanyId { get; set; }
