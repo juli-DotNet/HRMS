@@ -7,10 +7,10 @@ namespace HRMS.Core.Services.Interfaces
 {
     public interface ICityService
     {
-        Task<Response<int>> CreateAsync(Region model);
+        Task<Response<int>> CreateAsync(City model);
         Task<Response> DeleteAsync(int id);
-        Task<Response> EditAsync(Region model);
-        Task<Response<IEnumerable<Region>>> GetAllAsync(int? counryId,int? regionId);
-        Task<Response<Region>> GetByIdAsync(int id);
+        Task<Response> EditAsync(City model);
+        Task<Response<IEnumerable<City>>> GetAllAsync(int? counryId,int? regionId);
+        Task<Response<City>> GetByIdAsync(int id);
     }
 }
