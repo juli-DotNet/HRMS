@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HRMS.Core.Model;
 using HRMS.Core.Services.Interfaces;
 using HRMS.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -41,7 +42,7 @@ namespace HRMS.Web.Controllers
         public async Task<IActionResult> GetRegions(string search, int page)
         {
 
-            var serviceResponse = await service.GetAllCountriesAsync(search);
+            var serviceResponse = await service.GetAllRegionsAsync(search,null);
 
             var result = new JsonGenericModel();
             if (serviceResponse.IsSuccessful)
@@ -57,8 +58,15 @@ namespace HRMS.Web.Controllers
             return Json(result);
         }
 
+        private JsonData ParseCountries(Region a)
+        {
+            return new JsonData
+            {
+                Id = a.Id.ToString(),
+                Text = a.Name
 
-
+            };
+        }
 
         private static JsonData ParseCountries(Core.Model.Country a)
         {
