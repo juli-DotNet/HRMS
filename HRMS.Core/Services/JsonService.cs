@@ -16,14 +16,28 @@ namespace HRMS.Core.Services
             this.work = work;
         }
 
-       
 
-        public async Task<Response<IEnumerable<Country>>> GetAllCountriesAsync()
+
+        public async Task<Response<IEnumerable<Country>>> GetAllCountriesAsync(string term)
         {
             var result = new Response<IEnumerable<Country>> { IsSuccessful = true };
             try
             {
-                result.Result = await work.Country.WhereAsync(a => a.IsValid);
+                result.Result = await work.Country.WhereAsync(a => a.IsValid && a.Name.ToLower().Contains(term.ToLower()));
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
+        }
+        public async Task<Response<IEnumerable<Region>>> GetAllRegionsAsync(string term, int? countryId)
+        {
+            var result = new Response<IEnumerable<Region>> { IsSuccessful = true };
+            try
+            {
+                result.Result = await work.Region.WhereAsync(a => a.IsValid && a.Name.ToLower().Contains(term.ToLower()));
             }
             catch (Exception ex)
             {
@@ -33,13 +47,10 @@ namespace HRMS.Core.Services
             return result;
         }
 
-        public Task<Response<IEnumerable<City>>> GetAllCitiesAsync(int? countryId, int? regionId)
+        public async Task<Response<IEnumerable<City>>> GetAllCitiesAsync(string term, int? countryId, int? regionId)
         {
             throw new NotImplementedException();
         }
-        public Task<Response<IEnumerable<Region>>> GetAllRegionsAsync(int? countryId)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

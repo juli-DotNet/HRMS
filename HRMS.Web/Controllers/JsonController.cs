@@ -21,14 +21,33 @@ namespace HRMS.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCountries(string search, int page)
         {
-          
-            var serviceResponse = await service.GetAllCountriesAsync();
+
+            var serviceResponse = await service.GetAllCountriesAsync(search);
 
             var result = new JsonGenericModel();
             if (serviceResponse.IsSuccessful)
             {
                 result.IsSuccessful = true;
-                result.Items = serviceResponse.Result.Where(a=>a.Name.ToLower().Contains(search.ToLower())).Select(a => ParseCountries(a));
+                result.Items = serviceResponse.Result.Select(a => ParseCountries(a));
+            }
+            else
+            {
+                result.ErrorMessage = serviceResponse.Message;
+            }
+
+            return Json(result);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetRegions(string search, int page)
+        {
+
+            var serviceResponse = await service.GetAllCountriesAsync(search);
+
+            var result = new JsonGenericModel();
+            if (serviceResponse.IsSuccessful)
+            {
+                result.IsSuccessful = true;
+                result.Items = serviceResponse.Result.Select(a => ParseCountries(a));
             }
             else
             {
