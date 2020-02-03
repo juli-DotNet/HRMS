@@ -17,6 +17,7 @@ namespace HRMS.Web.Controllers
         {
             this.countryService = countryService;
         }
+
         public async Task<IActionResult> Index()
         {
             var result = await countryService.GetAllAsync();
@@ -42,19 +43,24 @@ namespace HRMS.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CountryViewModel model)
         {
-            var toCreateModel = new Country
+            if (ModelState.IsValid)
             {
-                Name = model.Name,
-                Code = model.Code
-            };
-            var result = await countryService.CreateAsync(toCreateModel);
-            if (!result.IsSuccessful)
-            {
-                ModelState.AddModelError("", result.Message);
-                return View(model);
+                var toCreateModel = new Country
+                {
+                    Name = model.Name,
+                    Code = model.Code
+                };
+                var result = await countryService.CreateAsync(toCreateModel);
+                if (!result.IsSuccessful)
+                {
+                    ModelState.AddModelError("", result.Message);
+                    return View(model);
+                }
+                return RedirectToAction("Index");
             }
 
-            return RedirectToAction("Index");
+
+            return View(model);
         }
 
 
@@ -79,20 +85,25 @@ namespace HRMS.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CountryViewModel model)
         {
-            var toUpdateModel = new Country
+            if (ModelState.IsValid)
             {
-                Name = model.Name,
-                Id = model.Id,
-                Code = model.Code
-            };
-            var result = await countryService.EditAsync(toUpdateModel);
-            if (!result.IsSuccessful)
-            {
-                ModelState.AddModelError("", result.Message);
-                return View(model);
+                var toUpdateModel = new Country
+                {
+                    Name = model.Name,
+                    Id = model.Id,
+                    Code = model.Code
+                };
+                var result = await countryService.EditAsync(toUpdateModel);
+                if (!result.IsSuccessful)
+                {
+                    ModelState.AddModelError("", result.Message);
+                    return View(model);
 
+                }
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            return View(model);
+              
         }
 
         public async Task<IActionResult> Details(int id)
