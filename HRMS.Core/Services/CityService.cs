@@ -154,6 +154,8 @@ namespace HRMS.Core.Services
             try
             {
                 result.Result = await work.City.GetByIdAsync(id);
+                result.Result.Country = await work.Country.GetByIdAsync(result.Result.CountryId);
+                result.Result.Region = await work.Region.GetByIdAsync(result.Result.RegionId);
             }
             catch (Exception ex)
             {
