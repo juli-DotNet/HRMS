@@ -42,6 +42,7 @@ namespace HRMS.Persistance
         {
             return await this.dbSet.Where(predicate).ToListAsync();
         }
+       
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
         {
             return await this.dbSet.AnyAsync(predicate);
@@ -62,5 +63,10 @@ namespace HRMS.Persistance
             db.Entry(obj).State = EntityState.Modified;
             return Task.CompletedTask;
         }
+
+        //public async Task<List<T>> WhereAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, TProperty>> navigation)
+        //{
+        //    return await this.dbSet.Include(navigation).Where(predicate).ToListAsync();
+        //}
     }
 }
