@@ -19,6 +19,16 @@ namespace HRMS.Core.Common
         }
         public bool IsSuccessful { get; set; }
         public Exception Exception { get; set; }
-        public string Message { get; set; }
+        public string Message
+        {
+            get
+            {
+                if (Exception != null && Exception is HRMSException)
+                {
+                    return Exception.Message;
+                }
+                return "An error has happened,please contact administrator";
+            }
+        }
     }
 }

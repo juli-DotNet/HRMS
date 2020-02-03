@@ -31,16 +31,16 @@ namespace HRMS.Core.Services
             {
                 if (await DoesCityExistAsync(model.Name,null))
                 {
-                    throw new Exception("Region already exists");
+                    throw new HRMSException("Region already exists");
                 }
 
                 if (model.CountryId == 0)
                 {
-                    throw new Exception("Country cant be emty");
+                    throw new HRMSException("Country cant be emty");
                 }
                 if (model.RegionId == 0)
                 {
-                    throw new Exception("Region cant be emty");
+                    throw new HRMSException("Region cant be emty");
                 }
                 await work.City.InsertAsync(model);
                 await work.SaveChangesAsync();
@@ -49,7 +49,7 @@ namespace HRMS.Core.Services
 
                 if (_city == null)
                 {
-                    throw new Exception("Country wasnt saved correctly");
+                    throw new HRMSException("City wasnt saved correctly");
                 }
                 result.Result = _city.Id;
             }
@@ -69,21 +69,21 @@ namespace HRMS.Core.Services
             {
                 if (await DoesCityExistAsync(model.Name,model.Id))
                 {
-                    throw new Exception("Region already exists");
+                    throw new HRMSException("Region already exists");
                 }
 
                 if (model.CountryId == 0)
                 {
-                    throw new Exception("Country cant be emty");
+                    throw new HRMSException("Country cant be emty");
                 }
                 if (model.RegionId == 0)
                 {
-                    throw new Exception("Region cant be emty");
+                    throw new HRMSException("Region cant be emty");
                 }
                 var currentEntity = await work.City.GetByIdAsync(model.Id);
                 if (currentEntity == null)
                 {
-                    throw new Exception("City cant be saved");
+                    throw new HRMSException("City cant be saved");
                 }
                 currentEntity.Name = model.Name;
                 currentEntity.CountryId = model.CountryId;

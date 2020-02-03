@@ -30,12 +30,12 @@ namespace HRMS.Core.Services
             {
                 if (await DoesRegionExistAsync(model.Name, null))
                 {
-                    throw new Exception("Region already exists");
+                    throw new HRMSException("Region already exists");
                 }
 
                 if (model.CountryId == 0)
                 {
-                    throw new Exception("Country cant be emty");
+                    throw new HRMSException("Country cant be emty");
                 }
                 await work.Region.InsertAsync(model);
                 await work.SaveChangesAsync();
@@ -44,7 +44,7 @@ namespace HRMS.Core.Services
 
                 if (region == null)
                 {
-                    throw new Exception("Country wasnt saved correctly");
+                    throw new HRMSException("Country wasnt saved correctly");
                 }
                 result.Result = region.Id;
             }
@@ -63,17 +63,17 @@ namespace HRMS.Core.Services
             {
                 if (await DoesRegionExistAsync(model.Name, model.Id))
                 {
-                    throw new Exception("Region already exists");
+                    throw new HRMSException("Region already exists");
                 }
 
                 if (model.CountryId == 0)
                 {
-                    throw new Exception("Country cant be emty");
+                    throw new HRMSException("Country cant be emty");
                 }
                 var currentEntity = await work.Region.GetByIdAsync(model.Id);
                 if (currentEntity == null)
                 {
-                    throw new Exception("region cant be saved");
+                    throw new HRMSException("region cant be saved");
                 }
                 currentEntity.Name = model.Name;
                 currentEntity.CountryId = model.CountryId;

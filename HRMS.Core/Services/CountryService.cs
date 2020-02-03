@@ -32,7 +32,7 @@ namespace HRMS.Core.Services
             {
                 if (await DoesCountryExistAsync(model.Code, null))
                 {
-                    throw new Exception("Country already exists");
+                    throw new HRMSException("Country already exists");
                 }
 
                 await work.Country.InsertAsync(model);
@@ -42,7 +42,7 @@ namespace HRMS.Core.Services
 
                 if (country == null)
                 {
-                    throw new Exception("Country wasnt saved correctly");
+                    throw new HRMSException("Country wasnt saved correctly");
                 }
                 result.Result = country.Id;
             }
@@ -62,13 +62,13 @@ namespace HRMS.Core.Services
             {
                 if (await DoesCountryExistAsync(model.Code, model.Id))
                 {
-                    throw new Exception("Country already exists");
+                    throw new HRMSException("Country already exists");
                 }
 
                 var currentEntity = await work.Country.GetByIdAsync(model.Id);
                 if (currentEntity == null)
                 {
-                    throw new Exception("Country cant be saved");
+                    throw new HRMSException("Country cant be saved");
                 }
                 currentEntity.Code = model.Code;
                 currentEntity.Name = model.Name;
