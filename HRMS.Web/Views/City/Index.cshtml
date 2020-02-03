@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HRMS.Web.Models.RegionViewModel>
+﻿@model IEnumerable<HRMS.Web.Models.CityViewModel>
 
 @{
     ViewData["Title"] = "Country";
@@ -10,9 +10,9 @@
         <h2 class="d-inline">Regions</h2>
         <a asp-action="Create" class="btn btn-success float-right">Create New</a>
     </div>
-    <hr/>
+    <hr />
 </div>
-<hr/>
+<hr />
 <div class="list-header"></div>
 <main>
     <table class="table display">
@@ -23,6 +23,9 @@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Country)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Region)
                 </th>
                 <th class="no-sort">Actions</th>
             </tr>
@@ -36,6 +39,9 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Country)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Region)
                     </td>
                     <td class="actions">
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info ">Details </a>
@@ -81,8 +87,8 @@
 
             $('#confirm-delete').on('show.bs.modal', function (e) {
                 $(".modal-body").empty().html(" Are you sure you want to delete this item ?");
-               var url= $(e.relatedTarget).attr('href');
-                $(this).find('.btn-ok').attr('href',url);
+                var url = $(e.relatedTarget).attr('href');
+                $(this).find('.btn-ok').attr('href', url);
             });
 
             $(".btn-ok").on("click", function (event) {

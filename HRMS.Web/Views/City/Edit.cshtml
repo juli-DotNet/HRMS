@@ -1,4 +1,4 @@
-﻿@model HRMS.Web.Models.RegionViewModel
+﻿@model HRMS.Web.Models.CityViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -22,6 +22,14 @@
                     <option selected value="@Model.CountryId">@Model.Country</option>
                 </select>
                 <span asp-validation-for="CountryId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Region" class="control-label"></label>
+                <select asp-for="RegionId" class="form-control selectRegionAdd">
+                    <option selected value="@Model.RegionId">@Model.Region</option>
+                </select>
+                <span asp-validation-for="RegionId" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -91,6 +99,25 @@
                 placeholder: 'Select an option',
                 ajax: {
                     url: '@Url.Action("GetCountries", "Json")',
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            page: params.page || 1
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.items
+                        };
+                    }
+                }
+            });
+
+            $('.selectRegionAdd').select2({
+                placeholder: 'Select an option',
+                ajax: {
+                    url: '@Url.Action("GetRegions", "Json")',
                     data: function (params) {
                         var query = {
                             search: params.term,
