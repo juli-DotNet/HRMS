@@ -121,7 +121,7 @@ namespace HRMS.Core.Services
             var result = new Response<IEnumerable<Company>> { IsSuccessful = true };
             try
             {
-                result.Result = await work.Company.GetAllAsync();
+                result.Result = (await work.Company.GetAllAsync()).Where(a=>a.IsValid);
 
             }
             catch (Exception ex)
