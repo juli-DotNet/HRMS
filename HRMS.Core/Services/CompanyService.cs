@@ -22,6 +22,13 @@ namespace HRMS.Core.Services
             var result = id.HasValue ? await work.Company.AnyAsync(a => a.Name.ToLower() == name.ToLower() && a.IsValid && a.Id != id)
                 : await work.Company.AnyAsync(a => a.Name.ToLower() == name.ToLower() && a.IsValid);
             return result;
+
+        }
+        async Task<bool> DoesCompanyNiptExistAsync(string name, Guid? id)
+        {
+            var result = id.HasValue ? await work.Company.AnyAsync(a => a.NIPT.ToLower() == name.ToLower() && a.IsValid && a.Id != id)
+                : await work.Company.AnyAsync(a => a.NIPT.ToLower() == name.ToLower() && a.IsValid);
+            return result;
         }
         public async Task<Response<Guid>> CreateAsync(Company model)
         {
@@ -32,7 +39,7 @@ namespace HRMS.Core.Services
                 {
                     throw new HRMSException("Company already exists");
                 }
-                if (await DoesCompanyExistAsync(model.NIPT, null))
+                if (await DoesCompanyNiptExistAsync(model.NIPT, null))
                 {
                     throw new HRMSException("Company already exists-Nipt");
                 }
@@ -84,7 +91,7 @@ namespace HRMS.Core.Services
                 {
                     throw new HRMSException("Company already exists");
                 }
-                if (await DoesCompanyExistAsync(model.NIPT, model.Id))
+                if (await DoesCompanyNiptExistAsync(model.NIPT, model.Id))
                 {
                     throw new HRMSException("Company already exists-Nipt");
                 }
