@@ -8,7 +8,7 @@ namespace HRMS.Core.Services.Interfaces
 {
     public interface ICompanyService
     {
-        Task<Response<int>> CreateAsync(Company model);
+        Task<Response<Guid>> CreateAsync(Company model);
         Task<Response> DeleteAsync(Guid id);
         Task<Response> EditAsync(Company model);
         Task<Response<IEnumerable<Company>>> GetAllAsync();

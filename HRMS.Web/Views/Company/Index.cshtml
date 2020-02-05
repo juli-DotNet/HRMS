@@ -1,13 +1,13 @@
-﻿@model IEnumerable<HRMS.Web.Models.CityViewModel>
+﻿@model IEnumerable<HRMS.Web.Models.CompanyViewModel>
 
 @{
-    ViewData["Title"] = "City";
+    ViewData["Title"] = "Compnay";
 }
 
 
 <div class="row">
     <div class="col-md-12">
-        <h2 class="d-inline">Regions</h2>
+        <h2 class="d-inline">Companies</h2>
         <a asp-action="Create" class="btn btn-success float-right">Create New</a>
     </div>
     <hr />
@@ -22,10 +22,10 @@
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Country)
+                    @Html.DisplayNameFor(model => model.NIPT)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Region)
+                    @Html.DisplayNameFor(model => model.Description)
                 </th>
                 <th class="no-sort">Actions</th>
             </tr>
@@ -38,10 +38,10 @@
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Country)
+                        @Html.DisplayFor(modelItem => item.NIPT)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Region)
+                        @Html.DisplayFor(modelItem => item.Description)
                     </td>
                     <td class="actions">
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info ">Details </a>

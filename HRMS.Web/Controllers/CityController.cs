@@ -141,8 +141,6 @@ namespace HRMS.Web.Controllers
                 }
                 return RedirectToAction("Index");
             }
-
-
             return View(model);
         }
 

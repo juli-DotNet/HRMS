@@ -20,7 +20,7 @@ namespace HRMS.Core.Services
         async Task<bool> DoesCompanyExistAsync(string name, Guid? id)
         {
             var result = id.HasValue ? await work.Company.AnyAsync(a => a.Name.ToLower() == name.ToLower() && a.IsValid && a.Id != id)
-                : await work.City.AnyAsync(a => a.Name.ToLower() == name.ToLower() && a.IsValid);
+                : await work.Company.AnyAsync(a => a.Name.ToLower() == name.ToLower() && a.IsValid);
             return result;
         }
         public async Task<Response<Guid>> CreateAsync(Company model)
