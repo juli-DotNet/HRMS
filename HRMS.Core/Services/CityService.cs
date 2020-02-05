@@ -29,7 +29,7 @@ namespace HRMS.Core.Services
             var result = new Response<int>() { IsSuccessful = true };
             try
             {
-                if (await DoesCityExistAsync(model.Name,null))
+                if (await DoesCityExistAsync(model.Name, null))
                 {
                     throw new HRMSException("Region already exists");
                 }
@@ -67,7 +67,7 @@ namespace HRMS.Core.Services
             var result = new Response { IsSuccessful = true };
             try
             {
-                if (await DoesCityExistAsync(model.Name,model.Id))
+                if (await DoesCityExistAsync(model.Name, model.Id))
                 {
                     throw new HRMSException("Region already exists");
                 }
@@ -88,7 +88,7 @@ namespace HRMS.Core.Services
                 currentEntity.Name = model.Name;
                 currentEntity.CountryId = model.CountryId;
                 currentEntity.RegionId = model.RegionId;
-               
+
                 await work.City.UpdateAsync(currentEntity);
                 await work.SaveChangesAsync();
             }
@@ -118,8 +118,6 @@ namespace HRMS.Core.Services
             }
             return result;
         }
-
-
 
         public async Task<Response<IEnumerable<City>>> GetAllAsync(int? counryId, int? regionId)
         {
