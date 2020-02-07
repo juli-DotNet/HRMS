@@ -121,7 +121,7 @@ namespace HRMS.Core.Services
             var result = new Response<IEnumerable<Company>> { IsSuccessful = true };
             try
             {
-                result.Result = (await work.Company.GetAllAsync()).Where(a=>a.IsValid);
+                result.Result = (await work.Company.GetAllAsync()).Where(a => a.IsValid);
 
             }
             catch (Exception ex)
@@ -139,6 +139,82 @@ namespace HRMS.Core.Services
             {
                 result.Result = await work.Company.GetByIdAsync(id);
 
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
+        }
+        public async Task<Response<List<CompanySite>>> GetLinkedSites(Guid companyId)
+        {
+            var result = new Response<List<CompanySite>> { IsSuccessful = true };
+            try
+            {
+                result.Result = await work.CompanySite.WhereAsync(a => a.CompanyId == companyId && a.IsValid);
+
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
+        }
+
+        public async Task<Response> LinkSiteAsync(Guid companyId, Guid siteId)
+        {
+            var result = new Response { IsSuccessful = true };
+            try
+            {
+
+                var companySites = await work.CompanySite.WhereAsync(a => a.CompanyId == companyId && a.SiteId == siteId);
+
+                if (companySites == null || companySites.Count == 0)
+                {
+                    await work.CompanySite.InsertAsync(new CompanySite
+                    {
+                        CompanyId = companyId,
+                        SiteId = siteId
+                    });
+                }
+                else
+                {
+                    var lastCompanySite = companySites.OrderByDescending(a => a.CreatedOn).First();
+                    lastCompanySite.IsValid = true;
+                }
+                await work.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
+        }
+
+        
+        public async Task<Response> RemoveLinkedSite(Guid companyId, Guid siteId)
+        {
+            var result = new Response { IsSuccessful = true };
+            try
+            {
+
+                var companySites = await work.CompanySite.WhereAsync(a => a.CompanyId == companyId && a.SiteId == siteId && a.IsValid);
+
+                if (companySites == null || companySites.Count == 0)
+                {
+                    throw new HRMSException("entity couldnt be found");
+                }
+                else
+                {
+                    foreach (var companySite in companySites)
+                    {
+                        companySite.IsValid = false;
+                    }
+                }
+                await work.SaveChangesAsync();
             }
             catch (Exception ex)
             {
