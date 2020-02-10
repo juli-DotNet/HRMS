@@ -98,6 +98,80 @@ namespace HRMS.Web.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> LinkSite(Guid id, Guid siteId)
+        {
+            GenericViewModel result = new GenericViewModel();
+            if (siteId == Guid.Empty)
+            {
+                result.ErrorMessage = "Please select site";
+                return Json(result);
+            }
+
+            var linkResult = await companyService.LinkSiteAsync(id, siteId);
+
+            if (linkResult.IsSuccessful)
+            {
+                result.IsSuccessful = true;
+            }
+            else
+            {
+                result.ErrorMessage = linkResult.Message;
+            }
+            return Json(result);
+        }
+
+        public async Task<ActionResult> RemoveLinkedSite(Guid id, Guid siteId)
+        {
+            GenericViewModel result = new GenericViewModel();
+            if (siteId == Guid.Empty)
+            {
+                result.ErrorMessage = "Please select site";
+            }
+
+            var linkResult = await companyService.RemoveLinkedSite(id, siteId);
+
+            if (linkResult.IsSuccessful)
+            {
+                result.IsSuccessful = true;
+            }
+            else
+            {
+                result.ErrorMessage = linkResult.Message;
+            }
+            return Json(result);
+        }
+
+        public async Task<ActionResult> LinkedSites(Guid id)
+        {
+            var result = new LinkedSiteJsonModel();
+            var linkResult = await companyService.GetLinkedSites(id);
+
+            if (linkResult.IsSuccessful)
+            {
+                result.IsSuccessful = true;
+                result.Items = linkResult.Result.Select(a => Parse(a));
+            }
+            else
+            {
+                result.ErrorMessage = linkResult.Message;
+            }
+            return Json(result);
+        }
+
+        private SiteDto Parse(CompanySite a)
+        {
+            return new SiteDto
+            {
+                City = a.Site.Address.City.Name,
+                Region = a.Site.Address.Region.Name,
+                Country = a.Site.Address.Country.Name,
+                PostalCode = a.Site.Address.PostalCode,
+                Name = a.Site.Name,
+                Id = a.SiteId
+            };
+        }
+
         public async Task<ActionResult> Delete(Guid id)
         {
             var response = await companyService.DeleteAsync(id);

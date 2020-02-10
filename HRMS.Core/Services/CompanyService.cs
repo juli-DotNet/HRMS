@@ -152,7 +152,14 @@ namespace HRMS.Core.Services
             var result = new Response<List<CompanySite>> { IsSuccessful = true };
             try
             {
-                result.Result = await work.CompanySite.WhereAsync(a => a.CompanyId == companyId && a.IsValid);
+                result.Result = await work.CompanySite.WhereAsync(a => 
+                    a.CompanyId == companyId && a.IsValid,
+                    a=>a.Site,
+                    a=>a.Site.Address,
+                    a=>a.Site.Address.City,
+                    a=>a.Site.Address.Country,
+                    a=>a.Site.Address.Region
+                    );
 
             }
             catch (Exception ex)

@@ -3,6 +3,7 @@ using HRMS.Core.Model;
 using HRMS.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HRMS.Core.Services
@@ -102,5 +103,33 @@ namespace HRMS.Core.Services
             return result;
         }
 
+        public async Task<Response<IEnumerable<Site>>> GetAllSitesAsync(string search, Guid companyId)
+        {
+            var result = new Response<IEnumerable<Site>> { IsSuccessful = true };
+            try
+            {
+                var currentConnectedSite = (await work.CompanySite.WhereAsync(a => a.IsValid && a.CompanyId == companyId))?.Select(a => a.SiteId);
+
+                if (string.IsNullOrEmpty(search))
+                {
+                    result.Result = await work.Site.WhereAsync(a => a.IsValid &&
+                                                                    !currentConnectedSite.Contains(a.Id)
+                                                                );
+                }
+                else
+                {
+                    result.Result = await work.Site.WhereAsync(a => a.IsValid &&
+                                                                    a.Name.ToLower().Contains(search.ToLower()) &&
+                                                                    !currentConnectedSite.Contains(a.Id)
+                                                                 );
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
+        }
     }
 }

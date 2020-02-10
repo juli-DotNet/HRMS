@@ -78,32 +78,58 @@ namespace HRMS.Web.Controllers
             return Json(result);
         }
 
-        private JsonData Parse(City a)
+        [HttpGet]
+        public async Task<IActionResult> GetSites(string search, int page,Guid companyId)
         {
-            return new JsonData
+
+            var serviceResponse = await service.GetAllSitesAsync(search,companyId);
+
+            var result = new JsonGenericModel();
+            if (serviceResponse.IsSuccessful)
+            {
+                result.IsSuccessful = true;
+                result.Items = serviceResponse.Result.Select(a => Parse(a));
+            }
+            else
+            {
+                result.ErrorMessage = serviceResponse.Message;
+            }
+
+            return Json(result);
+        }
+
+        private SelectDataDTO Parse(Site a)
+        {
+            return new SelectDataDTO
             {
                 Id = a.Id.ToString(),
                 Text = a.Name
-
             };
         }
-        private JsonData Parse(Region a)
+
+        private SelectDataDTO Parse(City a)
         {
-            return new JsonData
+            return new SelectDataDTO
             {
                 Id = a.Id.ToString(),
                 Text = a.Name
-
+            };
+        }
+        private SelectDataDTO Parse(Region a)
+        {
+            return new SelectDataDTO
+            {
+                Id = a.Id.ToString(),
+                Text = a.Name
             };
         }
 
-        private static JsonData Parse(Country a)
+        private static SelectDataDTO Parse(Country a)
         {
-            return new JsonData
+            return new SelectDataDTO
             {
                 Id = a.Id.ToString(),
                 Text = a.Name
-
             };
         }
     }

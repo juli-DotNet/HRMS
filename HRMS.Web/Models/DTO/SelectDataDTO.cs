@@ -1,6 +1,6 @@
 ﻿namespace HRMS.Web.Models
 {
-    public class JsonData
+    public class SelectDataDTO
     {
         public string Id { get; set; }
         public string Text { get; set; }
