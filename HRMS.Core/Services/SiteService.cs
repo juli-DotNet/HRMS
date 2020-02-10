@@ -11,10 +11,12 @@ namespace HRMS.Core.Services
     public class SiteService : BaseService, ISiteService
     {
         private readonly IUniOfWork work;
+        private readonly IAddressService address;
 
-        public SiteService(IUniOfWork work)
+        public SiteService(IUniOfWork work, IAddressService address)
         {
             this.work = work;
+            this.address = address;
         }
 
         async Task<bool> DoesSiteExistAsync(string name, Guid? id)
@@ -25,36 +27,26 @@ namespace HRMS.Core.Services
 
         }
 
-        async Task<Guid> GetAddressIdAsync(Address address)
-        {
-            var result = (await work.Address.WhereAsync(
-                        a =>
-                            a.StreetName.ToLower() == address.StreetName.ToLower() &&
-                            a.IsValid &&
-                            a.CityId == address.CityId
-                            )).FirstOrDefault();
-            return result?.Id ?? Guid.Empty;
-
-        }
+       
 
         public async Task<Response<Guid>> CreateAsync(Site model)
         {
             var result = new Response<Guid>() { IsSuccessful = true };
             try
             {
+                if (model.Address.CountryId == 0 || model.Address.RegionId == 0 || model.Address.CityId == 0)
+                {
+                    throw new HRMSException("Please enter correct address(City,Region,Country)");
+                }
                 if (await DoesSiteExistAsync(model.Name, null))
                 {
                     throw new HRMSException("Site already exists");
                 }
 
-                var addressId = await GetAddressIdAsync(model.Address);
-
-                if (addressId != Guid.Empty)
-                {
-                    model.AddressId = addressId;
-                    model.Address = null;
-                }
-
+                var addressResult = await address.InsertOrUpdate(model.Address);
+                
+                model.Address = addressResult;
+                model.AddressId = addressResult.Id;
                 await work.Site.InsertAsync(model);
                 await work.SaveChangesAsync();
 
@@ -98,25 +90,24 @@ namespace HRMS.Core.Services
             var result = new Response { IsSuccessful = true };
             try
             {
+                if (model.Address.CountryId == 0 || model.Address.RegionId == 0 || model.Address.CityId == 0)
+                {
+                    throw new HRMSException("Please enter correct address(City,Region,Country)");
+                }
                 if (await DoesSiteExistAsync(model.Name, model.Id))
                 {
                     throw new HRMSException("Site already exists");
                 }
-                var addressId = await GetAddressIdAsync(model.Address);
-
-                if (addressId != Guid.Empty)
-                {
-                    model.AddressId = addressId;
-                    model.Address = null;
-                }
+                var addressResult = await address.InsertOrUpdate(model.Address);
 
                 var currentEntity = await work.Site.GetByIdAsync(model.Id);
                 if (currentEntity == null)
                 {
                     throw new HRMSException("Site cant be saved,entity couldnt be found");
                 }
+                currentEntity.Address = addressResult;
                 currentEntity.Name = model.Name;
-
+                currentEntity.AddressId = addressResult.Id;
 
                 await work.Site.UpdateAsync(currentEntity);
                 await work.SaveChangesAsync();
@@ -135,7 +126,7 @@ namespace HRMS.Core.Services
             var result = new Response<IEnumerable<Site>> { IsSuccessful = true };
             try
             {
-                result.Result = (await work.Site.GetAllAsync()).Where(a => a.IsValid);
+                result.Result = await work.Site.WhereAsync(a => a.IsValid, a => a.Address, a => a.Address.Country, a => a.Address.Region, a => a.Address.City);
 
             }
             catch (Exception ex)
@@ -151,7 +142,8 @@ namespace HRMS.Core.Services
             var result = new Response<Site> { IsSuccessful = true };
             try
             {
-                result.Result = await work.Site.GetByIdAsync(id);
+                result.Result = await work.Site.FirstOrDefault(a => a.Id == id,
+                    a => a.Address, a => a.Address.Country, a => a.Address.Region, a => a.Address.City);
 
             }
             catch (Exception ex)

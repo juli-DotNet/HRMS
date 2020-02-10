@@ -68,6 +68,8 @@ namespace HRMS.Web
             services.AddScoped<IRegionService, RegionService>();
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<ISiteService, SiteService>();
+            services.AddTransient<IAddressService, AddressService>();
            
         }
 

@@ -17,6 +17,7 @@ namespace HRMS.Core.Services.Interfaces
         IQueryable<T> Where(Expression<Func<T, bool>> predicate);
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
         Task<List<T>> WhereAsync(Expression<Func<T, bool>> predicate);
-        //Task<List<T>> WhereAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, TProperty>> navigation);
+        Task<List<T>> WhereAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
+        Task<T> FirstOrDefault(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
     }
 }

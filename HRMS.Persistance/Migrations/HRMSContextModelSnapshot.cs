@@ -26,9 +26,7 @@ namespace HRMS.Persistance.Migrations
 
                     b.Property<int>("CityId");
 
-                    b.Property<int?>("CountryId");
-
-                    b.Property<int>("CountyId");
+                    b.Property<int>("CountryId");
 
                     b.Property<Guid?>("CreatedBy");
 
@@ -148,7 +146,8 @@ namespace HRMS.Persistance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Code");
+                    b.Property<string>("Code")
+                        .IsRequired();
 
                     b.Property<Guid?>("CreatedBy");
 
@@ -160,7 +159,8 @@ namespace HRMS.Persistance.Migrations
 
                     b.Property<DateTime>("ModifiedOn");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.HasKey("Id");
 

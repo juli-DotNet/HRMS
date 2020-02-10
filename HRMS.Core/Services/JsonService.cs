@@ -37,7 +37,24 @@ namespace HRMS.Core.Services
             var result = new Response<IEnumerable<Region>> { IsSuccessful = true };
             try
             {
-                result.Result = await work.Region.WhereAsync(a => a.IsValid && a.Name.ToLower().Contains(term.ToLower()));
+                if (countryId.HasValue)
+                {
+                    result.Result = await work.Region.WhereAsync(a =>
+                                                                 a.CountryId == countryId &&
+                                                                 a.IsValid &&
+                                                                 a.Name.ToLower().Contains(term.ToLower())
+                                                                );
+                }
+                else
+                {
+                    result.Result = await work.Region.WhereAsync(a =>
+                                                                 a.IsValid &&
+                                                                 a.Name.ToLower().Contains(term.ToLower())
+                                                               );
+                }
+
+
+
             }
             catch (Exception ex)
             {
@@ -49,7 +66,40 @@ namespace HRMS.Core.Services
 
         public async Task<Response<IEnumerable<City>>> GetAllCitiesAsync(string term, int? countryId, int? regionId)
         {
-            throw new NotImplementedException();
+            var result = new Response<IEnumerable<City>> { IsSuccessful = true };
+            try
+            {
+                if (countryId.HasValue && !regionId.HasValue)
+                {
+                    result.Result = await work.City.WhereAsync(a =>
+                                                                a.CountryId == countryId &&
+                                                                a.IsValid &&
+                                                                a.Name.ToLower().Contains(term.ToLower())
+                                                           );
+                }
+                else if (regionId.HasValue)
+                {
+                    result.Result = await work.City.WhereAsync(a =>
+                                                                a.RegionId == regionId &&
+                                                                a.IsValid &&
+                                                                a.Name.ToLower().Contains(term.ToLower())
+                                                           );
+                }
+                else
+                {
+                    result.Result = await work.City.WhereAsync(a =>
+                                                                a.IsValid &&
+                                                                a.Name.ToLower().Contains(term.ToLower())
+                                                           );
+                }
+
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
         }
 
     }

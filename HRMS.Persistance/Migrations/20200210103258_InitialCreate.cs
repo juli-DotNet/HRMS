@@ -38,7 +38,8 @@ namespace HRMS.Persistance.Migrations
                     CreatedBy = table.Column<Guid>(nullable: true),
                     ModifiedBy = table.Column<Guid>(nullable: true),
                     IsValid = table.Column<bool>(nullable: false),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: false),
+                    Code = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -82,8 +83,7 @@ namespace HRMS.Persistance.Migrations
                     ModifiedBy = table.Column<Guid>(nullable: true),
                     IsValid = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(nullable: true),
-                    CountyId = table.Column<int>(nullable: false),
-                    CountryId = table.Column<int>(nullable: true)
+                    CountryId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -108,8 +108,7 @@ namespace HRMS.Persistance.Migrations
                     ModifiedBy = table.Column<Guid>(nullable: true),
                     IsValid = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(nullable: true),
-                    CountyId = table.Column<int>(nullable: false),
-                    CountryId = table.Column<int>(nullable: true),
+                    CountryId = table.Column<int>(nullable: false),
                     RegionId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -141,8 +140,7 @@ namespace HRMS.Persistance.Migrations
                     IsValid = table.Column<bool>(nullable: false),
                     StreetName = table.Column<string>(nullable: true),
                     PostalCode = table.Column<string>(nullable: true),
-                    CountyId = table.Column<int>(nullable: false),
-                    CountryId = table.Column<int>(nullable: true),
+                    CountryId = table.Column<int>(nullable: false),
                     RegionId = table.Column<int>(nullable: false),
                     CityId = table.Column<int>(nullable: false)
                 },

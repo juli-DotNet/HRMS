@@ -29,7 +29,7 @@ namespace HRMS.Web.Controllers
             if (serviceResponse.IsSuccessful)
             {
                 result.IsSuccessful = true;
-                result.Items = serviceResponse.Result.Select(a => ParseCountries(a));
+                result.Items = serviceResponse.Result.Select(a => Parse(a));
             }
             else
             {
@@ -39,16 +39,16 @@ namespace HRMS.Web.Controllers
             return Json(result);
         }
         [HttpGet]
-        public async Task<IActionResult> GetRegions(string search, int page)
+        public async Task<IActionResult> GetRegions(string search, int page,int? countryId)
         {
 
-            var serviceResponse = await service.GetAllRegionsAsync(search,null);
+            var serviceResponse = await service.GetAllRegionsAsync(search,countryId);
 
             var result = new JsonGenericModel();
             if (serviceResponse.IsSuccessful)
             {
                 result.IsSuccessful = true;
-                result.Items = serviceResponse.Result.Select(a => ParseCountries(a));
+                result.Items = serviceResponse.Result.Select(a => Parse(a));
             }
             else
             {
@@ -58,7 +58,36 @@ namespace HRMS.Web.Controllers
             return Json(result);
         }
 
-        private JsonData ParseCountries(Region a)
+        [HttpGet]
+        public async Task<IActionResult> GetCities(string search, int page, int? countryId,int? regionId)
+        {
+
+            var serviceResponse = await service.GetAllCitiesAsync(search, countryId,regionId);
+
+            var result = new JsonGenericModel();
+            if (serviceResponse.IsSuccessful)
+            {
+                result.IsSuccessful = true;
+                result.Items = serviceResponse.Result.Select(a => Parse(a));
+            }
+            else
+            {
+                result.ErrorMessage = serviceResponse.Message;
+            }
+
+            return Json(result);
+        }
+
+        private JsonData Parse(City a)
+        {
+            return new JsonData
+            {
+                Id = a.Id.ToString(),
+                Text = a.Name
+
+            };
+        }
+        private JsonData Parse(Region a)
         {
             return new JsonData
             {
@@ -68,7 +97,7 @@ namespace HRMS.Web.Controllers
             };
         }
 
-        private static JsonData ParseCountries(Core.Model.Country a)
+        private static JsonData Parse(Country a)
         {
             return new JsonData
             {
