@@ -34,7 +34,7 @@
 
 
 <div class="list-header"></div>
-<div class="row ">
+<div class="row">
     <div class="col-md-11">
         <h3 class="d-inline">Sites of Company </h3>
     </div>
@@ -92,22 +92,19 @@
                     { "data": "region" },
                     { "data": "city" },
                     { "data": "postalCode" },
-                    {
-                        "data": "id"
-                    }
-                ]
-
-                , "columnDefs": [{ targets: 'no-sort', orderable: false },
-
-                    {
-                        targets: 5, render: function (data) {
-                            return '<button type="button" data-site-id="' + data +'"  class="btn btn-danger disabled" aria-disabled="true">Remove Site</button>'
-                        }
-                    }
-                ]
+                    {"data": "id"}
+                ],
+                "columnDefs":
+                    [
+                            { targets: 'no-sort', orderable: false },
+                            { targets: 5, render: function (data){
+                                    return '<button type="button" data-site-id="' + data +'"  class="btn btn-danger disabled" aria-disabled="true">Remove Site</button>'
+                                }
+                            }
+                    ]
             });
 
-            
+
         });
 
     </script>
