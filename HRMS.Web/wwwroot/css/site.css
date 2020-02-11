@@ -63,3 +63,10 @@ body {
 .list-header {
     margin-bottom:40px;
 }
+
+
+.modal form .form-group {
+    width: 80%;
+    margin-left: 10px;
+}
+

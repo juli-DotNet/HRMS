@@ -120,16 +120,16 @@ namespace HRMS.Web.Controllers
             }
             return Json(result);
         }
-
-        public async Task<ActionResult> RemoveLinkedSite(Guid id, Guid siteId)
+        [HttpPost]
+        public async Task<ActionResult> RemoveLinkedSite(Guid id)
         {
             GenericViewModel result = new GenericViewModel();
-            if (siteId == Guid.Empty)
+            if (id == Guid.Empty)
             {
                 result.ErrorMessage = "Please select site";
             }
 
-            var linkResult = await companyService.RemoveLinkedSite(id, siteId);
+            var linkResult = await companyService.RemoveLinkedSite(id);
 
             if (linkResult.IsSuccessful)
             {
@@ -168,7 +168,7 @@ namespace HRMS.Web.Controllers
                 Country = a.Site.Address.Country.Name,
                 PostalCode = a.Site.Address.PostalCode,
                 Name = a.Site.Name,
-                Id = a.SiteId
+                Id = a.Id
             };
         }
 

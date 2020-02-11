@@ -152,13 +152,13 @@ namespace HRMS.Core.Services
             var result = new Response<List<CompanySite>> { IsSuccessful = true };
             try
             {
-                result.Result = await work.CompanySite.WhereAsync(a => 
+                result.Result = await work.CompanySite.WhereAsync(a =>
                     a.CompanyId == companyId && a.IsValid,
-                    a=>a.Site,
-                    a=>a.Site.Address,
-                    a=>a.Site.Address.City,
-                    a=>a.Site.Address.Country,
-                    a=>a.Site.Address.Region
+                    a => a.Site,
+                    a => a.Site.Address,
+                    a => a.Site.Address.City,
+                    a => a.Site.Address.Country,
+                    a => a.Site.Address.Region
                     );
 
             }
@@ -201,25 +201,23 @@ namespace HRMS.Core.Services
             return result;
         }
 
-        
-        public async Task<Response> RemoveLinkedSite(Guid companyId, Guid siteId)
+
+        public async Task<Response> RemoveLinkedSite(Guid id)
         {
             var result = new Response { IsSuccessful = true };
             try
             {
 
-                var companySites = await work.CompanySite.WhereAsync(a => a.CompanyId == companyId && a.SiteId == siteId && a.IsValid);
+                var companySite = await work.CompanySite.FirstOrDefault(a => a.Id == id && a.IsValid);
 
-                if (companySites == null || companySites.Count == 0)
+                if (companySite == null)
                 {
                     throw new HRMSException("entity couldnt be found");
                 }
                 else
                 {
-                    foreach (var companySite in companySites)
-                    {
-                        companySite.IsValid = false;
-                    }
+                    companySite.IsValid = false;
+                    companySite.ModifiedOn = DateTime.Now;
                 }
                 await work.SaveChangesAsync();
             }

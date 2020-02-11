@@ -11,7 +11,7 @@ namespace HRMS.Core.Services.Interfaces
         Task<Response<Guid>> CreateAsync(Company model);
         Task<Response> LinkSiteAsync(Guid companyId, Guid siteId);
         Task<Response<List<CompanySite>>> GetLinkedSites(Guid companyId);
-        Task<Response> RemoveLinkedSite(Guid companyId,Guid siteId);
+        Task<Response> RemoveLinkedSite(Guid id);
         Task<Response> DeleteAsync(Guid id);
         Task<Response> EditAsync(Company model);
         Task<Response<IEnumerable<Company>>> GetAllAsync();

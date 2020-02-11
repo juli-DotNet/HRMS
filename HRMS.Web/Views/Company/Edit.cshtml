@@ -52,9 +52,116 @@
     </div>
 </div>
 
+<div class="list-header"></div>
+<div class="row ">
+    <div class="col-md-11">
+        <h3 class="d-inline">Sites of Company </h3>
+    </div>
+    <div class="col-md-1">
+        <a data-toggle="modal" data-target="#add-site-modal" class="btn btn-success">Add</a>
+    </div>
+</div>
+<hr />
+<div class="list-header"></div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table display">
+            <thead>
+                <tr>
+                    <th>
+                        Site
+                    </th>
+                    <th>
+                        Country
+                    </th>
+                    <th>
+                        Region
+                    </th>
+                    <th>
+                        City
+                    </th>
+                    <th>
+                        Postal Code
+                    </th>
+                    <th class="no-sort">Actions</th>
+                </tr>
+            <tbody></tbody>
+        </table>
+    </div>
+
+
+</div>
+
+
+<div class="modal" id="add-site-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Site</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="form-group">
+                            <label id="ModalErrorMessage" class="alert-danger"> this is a error </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Site:</label>
+                            <select id="newSite" class="form-control col-10"></select>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="confirmAddSite" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="remove-site-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Remove Site</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label id="RemoveModalErrorMessage" class="alert-danger"> this is a error </label>
+                    </div>
+                    <div class="form-group">
+                        Are you sure you want to remove this site ?
+                    </div>
+
+                </form>
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="confirmRemoveSite" class="btn btn-danger">Remove</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts{
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 
+    <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script>
         $(function () {
 
@@ -85,7 +192,125 @@
                 return false;
             });
 
-             
+        var table = $(".table").DataTable({
+                ajax: {
+                    url:"@Url.Action("LinkedSites","Company",new { id=Model.Id})",
+                    dataSrc: 'items'
+                } ,
+                "columns": [
+                    { "data": "name" },
+                    { "data": "country" },
+                    { "data": "region" },
+                    { "data": "city" },
+                    { "data": "postalCode" },
+                    {
+                        "data": "id"
+                    }
+                ]
+
+                , "columnDefs": [{ targets: 'no-sort', orderable: false },
+
+                    {
+                        targets: 5, render: function (data) {
+                            return '<button  type="button" data-site-id="'+data+'"  class="btn btn-danger removeLinkedSite">Remove Site</button>'
+                        }
+                    }
+                ]
+            });
+
+            $('#newSite').select2({
+                placeholder: 'Select an option',
+                dropdownParent: $('#add-site-modal'),
+                width: '100%',
+                ajax: {
+                    url: '@Url.Action("GetSites", "Json")',
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            page: params.page || 1,
+                            companyId:'@Model.Id'
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.items
+                        };
+                    }
+                }
+            });
+
+            $('#add-site-modal').on('shown.bs.modal', function (e) {
+                $("#ModalErrorMessage").hide();
+            })
+           
+
+            $("#confirmAddSite").on("click", function () {
+
+              var companyId = "@Model.Id";
+              var siteId = $('#newSite').val();
+
+              $.ajax({
+                        type: "Post",
+                        url: '@Url.Action("LinkSite")',
+                        data: {
+                                         id: companyId,
+                                         siteId:siteId
+                        },
+                        success: function (data) {
+                                        console.log(data);
+                                        if (data.isSuccessful) {
+
+                                                        $("#add-site-modal").modal('hide');
+                                                        table.ajax.reload();
+                                         }
+                                        else {
+                                            $("#ModalErrorMessage").empty().html(data.errorMessage).show();
+                                        }
+                        },
+                        error: function (e) {
+                            console.log(e);
+                        }
+              });
+
+            });
+            
+
+            $(".table").on("click",".removeLinkedSite", function (e) {
+                var siteId = $(this).attr("data-site-id");
+                console.log(siteId);
+
+                $("#confirmRemoveSite").attr("data-site-id", siteId);
+                $("#RemoveModalErrorMessage").hide();
+                $('#remove-site-modal').modal("show");
+            });
+
+            $("#confirmRemoveSite").on("click", function (event) {
+                event.preventDefault();
+                
+                var id = $(this).attr("data-site-id");
+               
+                $.ajax
+                    ({
+                        type: "POST",
+                        url: "@Url.Action("RemoveLinkedSite")",
+                        data: {
+                            id: id
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            if (data.isSuccessful) {
+                                $("#remove-site-modal").modal('hide');
+                                table.ajax.reload();
+                            }
+                            else {
+                                $("#RemoveModalErrorMessage").empty().html(data.errorMessage).show();
+                            }
+                        }
+                    });
+                return false;
+            });
+
         });
 
     </script>
