@@ -71,6 +71,7 @@ namespace HRMS.Web
             services.AddScoped<ISiteService, SiteService>();
             services.AddTransient<IAddressService, AddressService>();
             services.AddTransient<IEmployeeService, EmployeeService>();
+            services.AddTransient<IOrganigramService, OrganigramService>();
            
         }
 
