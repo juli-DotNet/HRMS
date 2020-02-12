@@ -10,24 +10,35 @@ namespace HRMS.Core.Services
     public class EmployeeService : BaseService, IEmployeeService
     {
         private readonly IUniOfWork work;
+        private readonly IAddressService address;
 
-        public EmployeeService(IUniOfWork work)
+        public EmployeeService(IUniOfWork work, IAddressService address)
         {
             this.work = work;
+            this.address = address;
         }
-        private Task<bool> DoesEmployeeExistAsync(string name, string lastName, DateTime bithDate, Guid? p)
+        private async Task<bool> DoesEmployeeExistAsync(string name, string lastName, DateTime bithDate, Guid? id)
         {
-            throw new NotImplementedException();
+            var result = id.HasValue ? await work.Employee.AnyAsync(a => a.Name.ToLower() == name.ToLower() && a.LastName.ToLower() == lastName.ToLower() && a.IsValid && a.Id != id)
+             : await work.Employee.AnyAsync(a => a.Name.ToLower() == name.ToLower() && a.LastName.ToLower() == lastName.ToLower() && a.IsValid);
+            return result;
         }
+
         public async Task<Response> CreateAsync(Employee model)
         {
             var result = new Response() { IsSuccessful = true };
             try
             {
-                if (await DoesEmployeeExistAsync(model.Name,model.LastName,model.BithDate, null))
+                if (await DoesEmployeeExistAsync(model.Name, model.LastName, model.BirthDate, null))
                 {
                     throw new HRMSException("Employee already exists");
                 }
+                if (model.ContactId == Guid.Empty)
+                {
+                    model.ContactId = null;
+                }
+                var addressResult = await address.InsertOrUpdate(model.Address);
+                model.AddressId = addressResult.Id;
                 await work.Employee.InsertAsync(model);
                 await work.SaveChangesAsync();
             }
@@ -39,8 +50,6 @@ namespace HRMS.Core.Services
             }
             return result;
         }
-
-        
 
         public async Task<Response> DeleteAsync(Guid id)
         {
@@ -65,7 +74,7 @@ namespace HRMS.Core.Services
             var result = new Response() { IsSuccessful = true };
             try
             {
-                if (await DoesEmployeeExistAsync(model.Name, model.LastName, model.BithDate, model.Id))
+                if (await DoesEmployeeExistAsync(model.Name, model.LastName, model.BirthDate, model.Id))
                 {
                     throw new HRMSException("Employee already exists");
                 }
@@ -78,11 +87,15 @@ namespace HRMS.Core.Services
                 currentEntity.Name = model.Name;
                 currentEntity.LastName = model.LastName;
                 currentEntity.Email = model.Email;
-                currentEntity.BithDate = model.BithDate;
+                currentEntity.BirthDate = model.BirthDate;
                 currentEntity.Telephone = model.Telephone;
                 currentEntity.Mobile = model.Mobile;
-                currentEntity.ContactId = model.ContactId;
-                currentEntity.AddressId = model.AddressId;
+                if (model.ContactId != Guid.Empty)
+                {
+                    currentEntity.ContactId = model.ContactId;
+                }
+                var addressResult = await address.InsertOrUpdate(model.Address);
+                currentEntity.AddressId = addressResult.Id;
 
                 await work.Employee.UpdateAsync(currentEntity);
                 await work.SaveChangesAsync();
@@ -104,11 +117,11 @@ namespace HRMS.Core.Services
                 if (companyId.HasValue)
                 {
                     //TD
-                    result.Result = await work.Employee.WhereAsync(a => a.IsValid);
+                    result.Result = await work.Employee.WhereAsync(a => a.IsValid, a => a.Contact, a => a.Address, a => a.Address.City, a => a.Address.Region, a => a.Address.Country);
                 }
                 else
                 {
-                    result.Result = await work.Employee.WhereAsync(a => a.IsValid);
+                    result.Result = await work.Employee.WhereAsync(a => a.IsValid, a => a.Contact, a => a.Address, a => a.Address.City, a => a.Address.Region, a => a.Address.Country);
                 }
 
             }
@@ -125,7 +138,7 @@ namespace HRMS.Core.Services
             var result = new Response<Employee> { IsSuccessful = true };
             try
             {
-                result.Result = await work.Employee.GetByIdAsync(id);
+                result.Result = await work.Employee.FirstOrDefault(a => a.IsValid && a.Id == id, a => a.Contact, a => a.Address, a => a.Address.City, a => a.Address.Region, a => a.Address.Country);
 
             }
             catch (Exception ex)

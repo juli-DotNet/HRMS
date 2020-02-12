@@ -26,7 +26,12 @@
                 <div class="col-md-12">
                     <label for="BirthDateYear" class="control-label">Birthdate </label>
                     <div class="form-group form-inline">
-                        <select style="width:65px;" asp-for="BirthDateYear" class="form-control"></select>
+                        <select style="width:65px;" asp-for="BirthDateYear" class="form-control">
+                            @if (Model.BirthDateYear > 0)
+                            {
+                                <option selected value="@Model.BirthDateYear">@Model.BirthDateYear</option>
+                            }
+                        </select>
                         &nbsp;&nbsp;
 
                         <select style="width:100px;" asp-for="BirthDateMonth" class="form-control">
@@ -44,7 +49,12 @@
                             <option value="12">December</option>
                         </select>
                         &nbsp;&nbsp;
-                        <select style="width:60px;" asp-for="BirthDateDay" class="form-control"></select>
+                        <select style="width:60px;" asp-for="BirthDateDay" class="form-control">
+                            @if (Model.BirthDateDay > 0)
+                            {
+                                <option selected value="@Model.BirthDateDay">@Model.BirthDateDay</option>
+                            }
+                        </select>
                         <br />
                         <span asp-validation-for="BirthDateDay" class="text-danger"></span><br />
                         <span asp-validation-for="BirthDateMonth" class="text-danger"></span><br />
@@ -90,17 +100,32 @@
             </div>
             <div class="form-group">
                 <label asp-for="Country" class="control-label"></label>
-                <select asp-for="CountryId" class="form-control"></select>
+                <select asp-for="CountryId" class="form-control">
+                    @if (Model.CountryId > 0)
+                    {
+                        <option selected value="@Model.CountryId">@Model.Country</option>
+                    }
+                </select>
                 <span asp-validation-for="CountryId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Region" class="control-label"></label>
-                <select asp-for="RegionId" class="form-control"></select>
+                <select asp-for="RegionId" class="form-control">
+                    @if (Model.RegionId > 0)
+                    {
+                        <option selected value="@Model.RegionId">@Model.Region</option>
+                    }
+                </select>
                 <span asp-validation-for="RegionId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="City" class="control-label"></label>
-                <select asp-for="CityId" class="form-control"></select>
+                <select asp-for="CityId" class="form-control">
+                    @if (Model.CityId > 0)
+                    {
+                        <option selected value="@Model.CityId">@Model.City</option>
+                    }
+                </select>
                 <span asp-validation-for="CityId" class="text-danger"></span>
             </div>
 
