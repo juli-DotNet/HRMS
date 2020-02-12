@@ -12,5 +12,6 @@ namespace HRMS.Core.Services.Interfaces
         Task<Response<IEnumerable<Region>>> GetAllRegionsAsync(string term,int? countryId);
         Task<Response<IEnumerable<City>>> GetAllCitiesAsync(string term,int? countryId,int? regionId);
         Task<Response<IEnumerable<Site>>> GetAllSitesAsync(string search,Guid company);
+        Task<Response<IEnumerable<Employee>>> GetAllContactsAsync(string search);
     }
 }

@@ -97,6 +97,15 @@ namespace HRMS.Web.Controllers
             }
             return View(model);
         }
+        public async Task<ActionResult> Delete(Guid id)
+        {
+            var response = await companyService.DeleteAsync(id);
+            return Json(new GenericViewModel
+            {
+                IsSuccessful = response.IsSuccessful,
+                ErrorMessage = response.Message
+            });
+        }
 
         [HttpPost]
         public async Task<ActionResult> LinkSite(Guid id, Guid siteId)
@@ -172,16 +181,7 @@ namespace HRMS.Web.Controllers
             };
         }
 
-        public async Task<ActionResult> Delete(Guid id)
-        {
-            var response = await companyService.DeleteAsync(id);
-            return Json(new GenericViewModel
-            {
-                IsSuccessful = response.IsSuccessful,
-                ErrorMessage = response.Message
-            });
-        }
-
+        
         private static Company Parse(CompanyViewModel model)
         {
             return new Company

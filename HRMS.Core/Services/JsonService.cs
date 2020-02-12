@@ -131,5 +131,25 @@ namespace HRMS.Core.Services
             }
             return result;
         }
+
+        public async Task<Response<IEnumerable<Employee>>> GetAllContactsAsync(string search)
+        {
+            var result = new Response<IEnumerable<Employee>> { IsSuccessful = true };
+            try
+            {
+                result.Result = await work.Employee.WhereAsync(a => a.IsValid && (
+
+                a.LastName.ToLower().Contains(search.ToLower()) ||
+                a.Name.ToLower().Contains(search.ToLower())
+                )
+                );
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
+        }
     }
 }

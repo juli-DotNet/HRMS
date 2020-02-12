@@ -70,6 +70,7 @@ namespace HRMS.Web
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<ISiteService, SiteService>();
             services.AddTransient<IAddressService, AddressService>();
+            services.AddTransient<IEmployeeService, EmployeeService>();
            
         }
 
