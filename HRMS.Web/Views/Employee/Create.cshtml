@@ -143,44 +143,62 @@
         $(function () {
 
 
-            $('#BirthDateYear').select2({
-                placeholder: 'Year',
-                ajax: {
-                    url: '@Url.Action("GetYears", "Json")',
-                    data: function (params) {
-                        var query = {
-                            search: params.term,
-                            page: params.page || 1
-                        }
-                        return query;
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: data.items
-                        };
-                    }
-                }
-           }).on('change', function () {
-                 PrepareDate("1");
-                });
-
-            $('#BirthDateMonth').val("@Model.BirthDateMonth").select2({
-                placeholder: 'Month'
-            }).on('change', function () {
-                PrepareDate("1");
-            });
-
-            function PrepareDate(value) {
-                $('#BirthDateDay').val(value).select2({
-                    placeholder: 'Day',
+                $('#BirthDateYear').select2({
+                    placeholder: 'Year',
                     ajax: {
-                        url: '@Url.Action("GetDays", "Json")',
+                        url: '@Url.Action("GetYears", "Json")',
                         data: function (params) {
                             var query = {
                                 search: params.term,
-                                page: params.page || 1,
-                                year: $('#BirthDateYear').val(),
-                                month: $('#BirthDateMonth').val()
+                                page: params.page || 1
+                            }
+                            return query;
+                        },
+                        processResults: function (data) {
+                            return {
+                                results: data.items
+                            };
+                        }
+                    }
+               }).on('change', function () {
+                     PrepareDate("1");
+                    });
+                $('#BirthDateMonth').select2({
+                    placeholder: 'Month'
+                }).on('change', function () {
+                    PrepareDate("1");
+                });
+
+                function PrepareDate(value) {
+                    $('#BirthDateDay').val(value).select2({
+                        placeholder: 'Day',
+                        ajax: {
+                            url: '@Url.Action("GetDays", "Json")',
+                            data: function (params) {
+                                var query = {
+                                    search: params.term,
+                                    page: params.page || 1,
+                                    year: $('#BirthDateYear').val(),
+                                    month: $('#BirthDateMonth').val()
+                                }
+                                return query;
+                            },
+                            processResults: function (data) {
+                                return {
+                                    results: data.items
+                                };
+                            }
+                        }
+                    });
+                }
+                $('#ContactId').select2({
+                    placeholder: 'Select contact',
+                    ajax: {
+                        url: '@Url.Action("GetContacts", "Json")',
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                page: params.page || 1
                             }
                             return query;
                         },
@@ -191,86 +209,15 @@
                         }
                     }
                 });
-            }
-            $('#ContactId').select2({
-                placeholder: 'Select contact',
-                ajax: {
-                    url: '@Url.Action("GetContacts", "Json")',
-                    data: function (params) {
-                        var query = {
-                            search: params.term,
-                            page: params.page || 1
-                        }
-                        return query;
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: data.items
-                        };
-                    }
-                }
-            });
 
-             $('#CountryId').select2({
-                placeholder: 'Select an option',
-                ajax: {
-                    url: '@Url.Action("GetCountries", "Json")',
-                    data: function (params) {
-                        var query = {
-                            search: params.term,
-                            page: params.page || 1
-                        }
-                        return query;
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: data.items
-                        };
-                    }
-                }
-           }).on('change', function () {
-               PrepareRegion("");
-           });
-
-            function PrepareRegion(value) {
-
-                $('#RegionId').val(value).select2({
-                        placeholder: 'Select an option',
-                        ajax: {
-                                url: '@Url.Action("GetRegions", "Json")',
-                                data: function (params) {
-                                    var query = {
-                                        search: params.term,
-                                        page: params.page || 1,
-                                        countryId: $("#CountryId").val()
-                                    }
-                                    return query;
-                                },
-                                processResults: function (data) {
-                                    return {
-                                        results: data.items
-                                    };
-                                }
-                        }
-                 }).on("change", function () {
-                     PrepareCity("");
-                 });
-
-            }
-
-
-
-            function PrepareCity(value) {
-                $('#CityId').val(value).select2({
+                 $('#CountryId').select2({
                     placeholder: 'Select an option',
                     ajax: {
-                        url: '@Url.Action("GetCities", "Json")',
+                        url: '@Url.Action("GetCountries", "Json")',
                         data: function (params) {
                             var query = {
                                 search: params.term,
-                                page: params.page || 1,
-                                countryId: $("#CountryId").val(),
-                                regionId: $("#RegionId").val()
+                                page: params.page || 1
                             }
                             return query;
                         },
@@ -280,13 +227,64 @@
                             };
                         }
                     }
-                });
-            }
+               }).on('change', function () {
+                   PrepareRegion("");
+               });
 
-            PrepareRegion('@Model.RegionId');
-            PrepareCity('@Model.CityId');
-            PrepareDate('@Model.BirthDateDay');
-        });
+                function PrepareRegion(value) {
 
+                    $('#RegionId').val(value).select2({
+                            placeholder: 'Select an option',
+                            ajax: {
+                                    url: '@Url.Action("GetRegions", "Json")',
+                                    data: function (params) {
+                                        var query = {
+                                            search: params.term,
+                                            page: params.page || 1,
+                                            countryId: $("#CountryId").val()
+                                        }
+                                        return query;
+                                    },
+                                    processResults: function (data) {
+                                        return {
+                                            results: data.items
+                                        };
+                                    }
+                            }
+                     }).on("change", function () {
+                         PrepareCity("");
+                     });
+
+                }
+
+
+
+                function PrepareCity(value) {
+                    $('#CityId').val(value).select2({
+                        placeholder: 'Select an option',
+                        ajax: {
+                            url: '@Url.Action("GetCities", "Json")',
+                            data: function (params) {
+                                var query = {
+                                    search: params.term,
+                                    page: params.page || 1,
+                                    countryId: $("#CountryId").val(),
+                                    regionId: $("#RegionId").val()
+                                }
+                                return query;
+                            },
+                            processResults: function (data) {
+                                return {
+                                    results: data.items
+                                };
+                            }
+                        }
+                    });
+                }
+
+                PrepareRegion('@Model.RegionId');
+                PrepareCity('@Model.CityId');
+                PrepareDate('@Model.BirthDateDay');
+            });
     </script>
 }
