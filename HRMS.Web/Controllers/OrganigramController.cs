@@ -127,8 +127,8 @@ namespace HRMS.Web.Controllers
                 IsCeo = model.IsCeo,
                 CompanySiteId = model.CompanySiteId,
                 RespondsToId = model.RespondsToId ?? Guid.Empty,
-                CompanySite = string.Concat(model.CompanySite.Company, ":", model.CompanySite.Site.Name),
-                RespondsTo = string.Concat(model.RespondsTo.Name)
+                CompanySite = string.Concat(model.CompanySite.Company.Name, ":", model.CompanySite.Site.Name),
+                RespondsTo = string.Concat(model.RespondsTo?.Name??"")
             };
         }
     }

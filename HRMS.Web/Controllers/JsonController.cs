@@ -153,6 +153,63 @@ namespace HRMS.Web.Controllers
             return Json(result);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetCompanySites(string search, int page,Guid? companyId)
+        {
+            var serviceResponse = await service.GetCompanySitesAsync(search,companyId);
+
+            var result = new JsonGenericModel();
+            if (serviceResponse.IsSuccessful)
+            {
+                result.IsSuccessful = true;
+                result.Items = serviceResponse.Result.Select(a => Parse(a));
+            }
+            else
+            {
+                result.ErrorMessage = serviceResponse.Message;
+            }
+
+            return Json(result);
+        }
+
+      
+
+        [HttpGet]
+        public async Task<IActionResult> GetOrganigrams(string search, int page, Guid? companySiteId)
+        {
+            var serviceResponse = await service.GetOrganigramsAsync(search,companySiteId);
+
+            var result = new JsonGenericModel();
+            if (serviceResponse.IsSuccessful)
+            {
+                result.IsSuccessful = true;
+                result.Items = serviceResponse.Result.Select(a => Parse(a));
+            }
+            else
+            {
+                result.ErrorMessage = serviceResponse.Message;
+            }
+
+            return Json(result);
+        }
+        private SelectDataDTO Parse(CompanySite a)
+        {
+            return new SelectDataDTO
+            {
+                Id = a.Id.ToString(),
+                Text = string.Concat(a.Company.Name,":",a.Site.Name)
+            };
+        }
+
+        private SelectDataDTO Parse(Organigram a)
+        {
+            return new SelectDataDTO
+            {
+                Id = a.Id.ToString(),
+                Text = a.Name
+            };
+        }
+
         private SelectDataDTO Parse(Employee a)
         {
             return new SelectDataDTO

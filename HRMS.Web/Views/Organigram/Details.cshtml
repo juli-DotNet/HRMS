@@ -1,0 +1,39 @@
+﻿@model HRMS.Web.Models.OrganigramViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<partial name="_header" />
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IsCeo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IsCeo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RespondsTo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RespondsTo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CompanySite)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CompanySite)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class=" btn btn-primary">Edit </a>
+</div>

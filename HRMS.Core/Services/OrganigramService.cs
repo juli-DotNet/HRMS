@@ -59,7 +59,7 @@ namespace HRMS.Core.Services
                 {
                     throw new HRMSException("Please enter correct Info(Name,CompanySite)");
                 }
-                if (await DoesOrganigramExistAsync(model.Name, model.CompanySiteId, null))
+                if (await DoesOrganigramExistAsync(model.Name, model.CompanySiteId, model.Id))
                 {
                     throw new HRMSException("Site already exists");
                 }
@@ -118,7 +118,7 @@ namespace HRMS.Core.Services
             var result = new Response<IEnumerable<Organigram>> { IsSuccessful = true };
             try
             {
-                result.Result = await work.Organigram.WhereAsync(a => a.IsValid, a => a.RespondsTo, a => a.CompanySite);
+                result.Result = await work.Organigram.WhereAsync(a => a.IsValid, a => a.RespondsTo, a => a.CompanySite, a => a.CompanySite.Site, a => a.CompanySite.Company);
 
             }
             catch (Exception ex)
@@ -135,7 +135,7 @@ namespace HRMS.Core.Services
             try
             {
                 result.Result = await work.Organigram.FirstOrDefault(a => a.Id == id,
-                    a => a.RespondsTo, a => a.CompanySite);
+                    a => a.RespondsTo, a => a.CompanySite, a => a.CompanySite.Site, a => a.CompanySite.Company);
 
             }
             catch (Exception ex)

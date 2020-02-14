@@ -103,26 +103,25 @@ namespace HRMS.Core.Services
             return result;
         }
 
-        public async Task<Response<IEnumerable<Site>>> GetAllSitesAsync(string search, Guid companyId)
+        public async Task<Response<IEnumerable<Site>>> GetAllSitesAsync(string search, Guid? companyId)
         {
             var result = new Response<IEnumerable<Site>> { IsSuccessful = true };
             try
             {
-                var currentConnectedSite = (await work.CompanySite.WhereAsync(a => a.IsValid && a.CompanyId == companyId))?.Select(a => a.SiteId);
-
                 if (string.IsNullOrEmpty(search))
                 {
-                    result.Result = await work.Site.WhereAsync(a => a.IsValid &&
-                                                                    !currentConnectedSite.Contains(a.Id)
-                                                                );
+                    search = "";
+                }
+                if (companyId.HasValue)
+                {
+                    result.Result = (await work.CompanySite.WhereAsync(a => a.IsValid && a.Site.Name.ToLower().Contains(search.ToLower()) && a.CompanyId == companyId.Value, a => a.Site))?.Select(a => a.Site);
                 }
                 else
                 {
-                    result.Result = await work.Site.WhereAsync(a => a.IsValid &&
-                                                                    a.Name.ToLower().Contains(search.ToLower()) &&
-                                                                    !currentConnectedSite.Contains(a.Id)
-                                                                 );
+                    result.Result = (await work.CompanySite.WhereAsync(a => a.IsValid && a.Site.Name.ToLower().Contains(search.ToLower()), a => a.Site))?.Select(a => a.Site);
                 }
+
+
             }
             catch (Exception ex)
             {
@@ -143,6 +142,54 @@ namespace HRMS.Core.Services
                 a.Name.ToLower().Contains(search.ToLower())
                 )
                 );
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
+        }
+
+        public async Task<Response<IEnumerable<Organigram>>> GetOrganigramsAsync(string search, Guid? companySiteId)
+        {
+            var result = new Response<IEnumerable<Organigram>> { IsSuccessful = true };
+            try
+            {
+                if (companySiteId.HasValue)
+                {
+                    result.Result = await work.Organigram.WhereAsync(a => a.IsValid && a.Name.ToLower().Contains(search.ToLower()) && a.CompanySiteId == companySiteId);
+                }
+                else
+                {
+                    result.Result = await work.Organigram.WhereAsync(a => a.IsValid && a.Name.ToLower().Contains(search.ToLower()));
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
+        }
+
+        public async Task<Response<IEnumerable<CompanySite>>> GetCompanySitesAsync(string search, Guid? companyId)
+        {
+            var result = new Response<IEnumerable<CompanySite>> { IsSuccessful = true };
+            try
+            {
+                if (string.IsNullOrEmpty(search))
+                {
+                    search = "";
+                }
+                if (companyId.HasValue)
+                {
+                    result.Result = (await work.CompanySite.WhereAsync(a => a.IsValid && (a.Site.Name.ToLower().Contains(search.ToLower()) || a.Company.Name.ToLower().Contains(search.ToLower())) && a.CompanyId == companyId.Value, a => a.Site, a => a.Company));
+                }
+                else
+                {
+                    result.Result = (await work.CompanySite.WhereAsync(a => a.IsValid && (a.Site.Name.ToLower().Contains(search.ToLower()) || a.Company.Name.ToLower().Contains(search.ToLower())), a => a.Site, a => a.Company));
+                }
             }
             catch (Exception ex)
             {

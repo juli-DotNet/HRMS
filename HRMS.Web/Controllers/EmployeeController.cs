@@ -120,7 +120,7 @@ namespace HRMS.Web.Controllers
                 City = a.Address.City.Name,
                 CityId = a.Address.CityId,
                 Contact = a.Contact != null ? string.Concat(a.Contact.Name, ",", a.Contact.LastName) : "",
-                ContactId = a.ContactId??Guid.Empty,
+                ContactId = a.ContactId ?? Guid.Empty,
                 Country = a.Address.Country.Name,
                 CountryId = a.Address.CountryId,
                 Email = a.Email,
