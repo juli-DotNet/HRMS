@@ -79,10 +79,10 @@ namespace HRMS.Persistance
             }
             if (query is null)
             {
-                return await dbSet.Where(predicate).ToListAsync();
+                return await dbSet.AsNoTracking().Where(predicate).ToListAsync();
             }
 
-            return await query.Where(predicate).ToListAsync();
+            return await query.AsNoTracking().Where(predicate).ToListAsync();
         }
 
         public async Task<T> FirstOrDefault(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)

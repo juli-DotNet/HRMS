@@ -13,5 +13,12 @@ namespace HRMS.Core.Services.Interfaces
         Task<Response> EditAsync(Organigram model);
         Task<Response<IEnumerable<Organigram>>> GetAllAsync(Guid? companyId);
         Task<Response<Organigram>> GetByIdAsync(Guid id);
+
+        Task<Response<OrganigramEmployee>> GetCurrentEmployeeDetailsForOrganigram(Guid organigramId,DateTime? currentDate);
+        Task<Response<IEnumerable<OrganigramEmployee>>> GetOrganigramEmployeHistory(Guid organigramId);
+        Task<Response> AddEmployee(OrganigramEmployee model);
+        Task<Response> EditEmployee(OrganigramEmployee model);
+        Task<Response> DeleteEmployeeDetail(Guid id);
+        Task<Response<OrganigramEmployee>> GetCurrentEmployeeDetails(Guid id);
     }
 }
