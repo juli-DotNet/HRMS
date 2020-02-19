@@ -72,6 +72,7 @@ namespace HRMS.Web
             services.AddTransient<IAddressService, AddressService>();
             services.AddTransient<IEmployeeService, EmployeeService>();
             services.AddTransient<IOrganigramService, OrganigramService>();
+            services.AddTransient<ICompanySiteService, CompanySiteService>();
            
         }
 

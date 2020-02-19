@@ -13,11 +13,13 @@ namespace HRMS.Web.Controllers
     {
         private readonly IJsonService service;
         private readonly ICompanyService companyService;
+        private readonly ICompanySiteService companySiteService;
 
-        public JsonController(IJsonService service, ICompanyService companyService)
+        public JsonController(IJsonService service, ICompanyService companyService, ICompanySiteService companySiteService)
         {
             this.service = service;
             this.companyService = companyService;
+            this.companySiteService = companySiteService;
         }
 
 
@@ -215,7 +217,7 @@ namespace HRMS.Web.Controllers
                              select new
                              {
                                  org.Id,
-                                 Name = dt?.Employee == null ? "" : string.Join(dt.Employee.Name, "", dt.Employee.LastName),
+                                 Name = dt?.Employee == null ? "" : string.Join(dt.Employee.Name, " : ", dt.Employee.LastName),
                                  Title = org.Name,
                                  RespondsTo = org.RespondsToId,
                                  org.IsCeo,
@@ -326,6 +328,133 @@ namespace HRMS.Web.Controllers
             else
             {
                 result.ErrorMessage = organigramResponse.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCompanySiteOrganigrams(Guid companySiteId)
+        {
+            var result = new CompanyOrganigramJsonModel();
+
+
+
+            var companySiteResponse = await companySiteService.GetById(companySiteId);
+
+            if (companySiteResponse.IsSuccessful)
+            {
+                result.IsSuccessful = true;
+
+                var employeeResponse = await service.GetCompanyEmployesAsync(companySiteResponse.Result.CompanyId);
+                var organigramResponse = await service.GetCompanyOrganigramsAsync(companySiteResponse.Result.CompanyId);
+
+                if (employeeResponse.IsSuccessful && organigramResponse.IsSuccessful)
+                {
+                    var employees = employeeResponse.Result.Where(a => a.Organigram.CompanySiteId == companySiteId && (a.EndDate==null || a.EndDate >= DateTime.Now));
+                    var organigrams = organigramResponse.Result.Where(a => a.CompanySiteId == companySiteId);
+                    var list = new List<OrganigramDto>(); //helper to search better
+                    // add the company
+                    var company = new OrganigramDto
+                    {
+                        Id = Guid.Empty,
+                        Name = companySiteResponse.Result.Company.Name,
+                        Title = "Company",
+                        Children = new List<OrganigramDto>()
+                    };
+
+                    var ceoData = organigramResponse.Result.FirstOrDefault(a => a.CompanySiteId == null && a.IsCeo);
+
+
+                    var companyCeo = new OrganigramDto() { Id = ceoData.Id, Name = "", Title = ceoData.Name, Children = new List<OrganigramDto>() };
+
+                    var ceoDt = employeeResponse.Result.FirstOrDefault(a => a.OrganigramId == companyCeo.Id);
+                    if (ceoDt != null)
+                    {
+                        companyCeo.Name = string.Join(ceoDt.Employee.Name, "", ceoDt.Employee.LastName);
+                    }
+                    company.Children.Add(companyCeo);
+
+
+
+                    var items = (from org in organigrams
+                                 join emp in employees on org.Id equals emp.OrganigramId into ps
+                                 from dt in ps.DefaultIfEmpty()
+                                 select new
+                                 {
+                                     org.Id,
+                                     Name = dt?.Employee == null ? "" : string.Join(dt.Employee.Name, " : ", dt.Employee.LastName),
+                                     Title = org.Name,
+                                     RespondsTo = org.RespondsToId,
+                                     org.IsCeo,
+                                     org.CompanySiteId,
+                                     org.CompanySite
+                                 }).ToList();
+
+
+                    // add the dep ceo-site ceo
+
+                    var siteCeoData = items.FirstOrDefault(a => a.IsCeo);
+
+                    var SiteCeo = new OrganigramDto() { Id = siteCeoData.Id, Name = siteCeoData.Name, Title = siteCeoData.Title, Children = new List<OrganigramDto>() };
+
+                    companyCeo.Children.Add(SiteCeo);
+
+
+                    //add the children TDDDD
+                    var retryList = new List<OrganigramDto>();
+
+                    foreach (var item in items.Where(a => !a.IsCeo && a.RespondsTo != null))
+                    {
+                        var father = list.FirstOrDefault(a => a.Id == item.RespondsTo);
+                        var dt = new OrganigramDto
+                        {
+                            Id = item.Id,
+                            Name = item.Name,
+                            Title = item.Title,
+                            Children = new List<OrganigramDto>(),
+                            ParentId = item.RespondsTo ?? Guid.Empty
+                        };
+                        if (father != null)
+                        {
+
+                            father.Children.Add(dt);
+                            list.Add(dt);
+                        }
+                        else
+                        {
+                            if (items.Any(a => a.Id == item.RespondsTo))// if we have a father
+                            {
+                                retryList.Add(dt);
+                            }
+                        }
+
+                    }
+                    // in case we need to 
+                    while (retryList.Count > 0)
+                    {
+                        var tmplist = retryList.ToList();
+                        foreach (var ch in tmplist)
+                        {
+                            var father = list.FirstOrDefault(a => a.Id == ch.ParentId);
+
+                            if (father != null)
+                            {
+                                list.Add(ch);// to keep the search simplier
+                                father.Children.Add(ch);
+                                retryList.Remove(ch);
+                            }
+                        }
+                    }
+                    list.Clear();
+                    retryList.Clear();
+
+                    result.Items = new List<OrganigramDto> { company };
+                }
+            }
+            else
+            {
+                result.ErrorMessage = companySiteResponse.Message;
             }
 
             return Json(result);

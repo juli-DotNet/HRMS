@@ -231,7 +231,7 @@
 
                     {
                         targets: 5, render: function (data) {
-                            return '<button  type="button" data-site-id="'+data+'"  class="btn btn-danger removeLinkedSite">Remove Site</button>'
+                            return '<button  type="button" data-site-id="' + data +'"  class="btn btn-primary detailSite">Details</button>'+" "+'<button  type="button" data-site-id="'+data+'"  class="btn btn-danger removeLinkedSite">Remove Site</button>'
                         }
                     }
                 ]
@@ -292,6 +292,12 @@
                         }
               });
 
+            });
+            $(".table").on("click", ".detailSite", function (e) {
+                var siteId = $(this).attr("data-site-id");
+                console.log(siteId);
+
+                window.location.href = '@Url.Action("Details", "CompanySite")' + "?id=" + siteId;
             });
 
 

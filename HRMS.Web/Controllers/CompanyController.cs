@@ -181,7 +181,7 @@ namespace HRMS.Web.Controllers
             };
         }
 
-        
+
         private static Company Parse(CompanyViewModel model)
         {
             return new Company

@@ -35,6 +35,7 @@ namespace HRMS.Core.Services
             var result = new Response<Guid>() { IsSuccessful = true };
             try
             {
+                model.Id = Guid.NewGuid();
                 if (await DoesCompanyExistAsync(model.Name, null))
                 {
                     throw new HRMSException("Company already exists");
@@ -43,6 +44,17 @@ namespace HRMS.Core.Services
                 {
                     throw new HRMSException("Company already exists-Nipt");
                 }
+                //Add Company Ceo
+               await work.Organigram.InsertAsync(new Organigram {
+                    Id=Guid.Empty,
+                    CompanyId=model.Id,
+                    CompanySiteId=null,
+                    IsCeo=true,
+                    Name=model.Name+" Ceo",
+                    IsValid=true,
+                    Company=model
+                    
+                });
 
                 await work.Company.InsertAsync(model);
                 await work.SaveChangesAsync();
@@ -147,6 +159,7 @@ namespace HRMS.Core.Services
             }
             return result;
         }
+
         public async Task<Response<List<CompanySite>>> GetLinkedSites(Guid companyId)
         {
             var result = new Response<List<CompanySite>> { IsSuccessful = true };
