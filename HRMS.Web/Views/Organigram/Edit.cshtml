@@ -188,7 +188,7 @@
                         success: function (data) {
                             console.log(data);
                             if (data.isSuccessful) {
-                                 window.location.href='@Url.Action("Index")';
+                                 window.location.href='@Url.Action("Index","Organigram",new { companyId=Model.CompanyId})';
                             }
                             else {
                                 $("#confirm-delete .modal-body").empty().html(data.errorMessage);

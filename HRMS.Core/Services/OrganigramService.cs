@@ -175,7 +175,7 @@ namespace HRMS.Core.Services
             try
             {
                 result.Result = await work.Organigram.FirstOrDefault(a => a.Id == id,
-                    a => a.RespondsTo, a => a.CompanySite, a => a.CompanySite.Site, a => a.CompanySite.Company);
+                    a => a.RespondsTo, a => a.CompanySite, a => a.CompanySite.Site, a => a.Company);
 
             }
             catch (Exception ex)

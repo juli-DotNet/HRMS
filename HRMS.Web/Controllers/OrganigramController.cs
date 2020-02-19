@@ -41,6 +41,7 @@ namespace HRMS.Web.Controllers
                 ModelState.AddModelError("", company.Message);
                 return View(new OrganigramViewModel());
             }
+            ViewBag.companyId = companyId;
             var model = new OrganigramViewModel() { CompanyId = companyId, Company = company.Result.Name };
             return View(model);
         }
@@ -49,9 +50,9 @@ namespace HRMS.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(OrganigramViewModel model)
         {
+            ViewBag.companyId = model.CompanyId;
             if (ModelState.IsValid)
             {
-
                 var toCreateModel = Parse(model);
                 var result = await organigram.CreateAsync(toCreateModel);
                 if (!result.IsSuccessful)
@@ -72,12 +73,14 @@ namespace HRMS.Web.Controllers
                 ModelState.AddModelError("", response.Message);
                 return View(new OrganigramViewModel());
             }
+            ViewBag.companyId = response.Result.CompanyId;
             return View(Parse(response.Result));
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(OrganigramViewModel model)
         {
+            ViewBag.companyId = model.CompanyId;
             if (ModelState.IsValid)
             {
                 var result = await organigram.EditAsync(Parse(model));
@@ -102,6 +105,7 @@ namespace HRMS.Web.Controllers
                 ModelState.AddModelError("", response.Message);
                 return View(new OrganigramViewModel());
             }
+            ViewBag.companyId = response.Result.CompanyId;
             return View(Parse(response.Result));
         }
 

@@ -4,7 +4,7 @@
         <h2 class="d-inline">Organigram - @ViewData["Title"]</h2>
     </div>
     <div class="col-md-1">
-        <a asp-action="Index" class="btn btn-light">Back</a>
+        <a asp-action="Index" asp-controller="Organigram" asp-route-companyId="@ViewBag.companyId" class="btn btn-light">Back</a>
     </div>
 </div>
 <hr />
