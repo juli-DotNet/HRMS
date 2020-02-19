@@ -70,41 +70,96 @@
             <tbody></tbody>
         </table>
     </div>
-
-
 </div>
 
+<div class="list-header"></div>
+<div class="row">
+    <div class="col-md-11">
+        <h3 class="d-inline">Organigram of Company </h3>
+    </div>
+    <div class="col-md-1">
+    </div>
+</div>
+<hr />
+<div class="list-header"></div>
+<div class="row">
+    <div class="col-md-12">
+        <div id="chart-container"></div>
+
+    </div>
+</div>
 
 @section Scripts{
     <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-
     <script>
         $(function () {
             var table = $(".table").DataTable({
                 ajax: {
-                    url:"@Url.Action("LinkedSites","Company",new { id=Model.Id})",
+                    url: "@Url.Action("LinkedSites","Company",new { id=Model.Id})",
                     dataSrc: 'items'
-                } ,
+                },
                 "columns": [
                     { "data": "name" },
                     { "data": "country" },
                     { "data": "region" },
                     { "data": "city" },
                     { "data": "postalCode" },
-                    {"data": "id"}
+                    { "data": "id" }
                 ],
                 "columnDefs":
                     [
-                            { targets: 'no-sort', orderable: false },
-                            { targets: 5, render: function (data){
-                                    return '<button type="button" data-site-id="' + data +'"  class="btn btn-danger disabled" aria-disabled="true">Remove Site</button>'
-                                }
+                        { targets: 'no-sort', orderable: false },
+                        {
+                            targets: 5, render: function (data) {
+                                return '<button type="button" data-site-id="' + data + '"  class="btn btn-danger disabled" aria-disabled="true">Remove Site</button>'
                             }
+                        }
                     ]
             });
+        });
+    </script>
 
 
+    <link rel="stylesheet" href="~/css/font-awesome.css">
+    <link rel="stylesheet" href="~/css/jquery.orgchart.css">
+
+    <script src="~/js/html2canvas.js"></script>
+    <script src="~/js/jquery.orgchart.js"></script>
+    <script>
+        $(function () {
+            var datascource = {
+                'id': 'rootNode', // It's a optional property which will be used as id attribute of node
+                // and data-parent attribute, which contains the id of the parent node
+                'collapsed': true, // By default, the children nodes of current node is hidden.
+                'className': 'top-level', // It's a optional property which will be used as className attribute of node.
+                'nodeTitlePro': 'Lao Lao',
+                'nodeContentPro': 'general manager',
+                'relationship': "0", // Note: when you activate ondemand loading nodes feature,
+                // you should use json datsource (local or remote) and set this property.
+                // This property implies that whether this node has parent node, siblings nodes or children nodes.
+                // relationshipValue is a string composed of three "0/1" identifier.
+                // First character stands for wether current node has parent node;
+                // Scond character stands for wether current node has siblings nodes;
+                // Third character stands for wether current node has children node.
+                'children': [ // The property stands for nested nodes.
+                    { 'nodeTitlePro': 'Bo Miao', 'nodeContentPro': 'department manager', 'relationship': '110' },
+                    {
+                        'nodeTitlePro': 'Su Miao', 'nodeContentPro': 'department manager', 'relationship': '111',
+                        'children': [
+                            { 'nodeTitlePro': 'Tie Hua', 'nodeContentPro': 'senior engineer', 'relationship': '110' },
+                            { 'nodeTitlePro': 'Hei Hei', 'nodeContentPro': 'senior engineer', 'relationship': '110' }
+                        ]
+                    },
+                    { 'nodeTitlePro': 'Yu Jie', 'nodeContentPro': 'department manager', 'relationship': '110' }
+                ]
+            };
+            $('#chart-container').orgchart({
+                'data': datascource,
+                'depth': 2,
+                'nodeTitle': 'nodeTitlePro',
+                'nodeContent': 'nodeTitlePro'
+            });
         });
 
     </script>

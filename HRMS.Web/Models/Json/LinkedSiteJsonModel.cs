@@ -6,5 +6,4 @@ namespace HRMS.Web.Models
     {
         public IEnumerable<SiteDto> Items { get; set; }
     }
-
 }

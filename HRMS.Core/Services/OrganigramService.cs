@@ -16,29 +16,65 @@ namespace HRMS.Core.Services
         {
             this.work = work;
         }
-        private async Task<bool> DoesOrganigramExistAsync(string name, Guid companySiteId, Guid? id)
+
+        public async Task IsModelValid(Organigram model, bool checkId = false)
         {
-            var result = id.HasValue ? await work.Organigram.AnyAsync(a => a.Name.ToLower() == name.ToLower() && a.CompanySiteId == companySiteId && a.IsValid && a.Id != id)
-               : await work.Organigram.AnyAsync(a => a.Name.ToLower() == name.ToLower() && a.CompanySiteId == companySiteId && a.IsValid);
-            return result;
+            if (model.CompanyId == Guid.Empty || string.IsNullOrEmpty(model.Name))
+            {
+                throw new HRMSException("Please enter correct info(Name,Company)");
+            }
+            if (model.RespondsToId == Guid.Empty)
+            {
+                model.RespondsToId = null;
+            }
+            if (model.CompanySiteId == Guid.Empty)
+            {
+                model.CompanySiteId = null;
+            }
+            if (model.CompanySiteId.HasValue && !model.IsCeo)
+            {
+                throw new HRMSException("This position should have a boss (respondsTo)");
+            }
+
+            //Check if the name exists in the company and companySite
+            bool nameExits = false;
+            if (checkId)
+            {
+
+                nameExits = await work.Organigram.AnyAsync(a =>
+                                                            a.Name.ToLower() == model.Name.ToLower() &&
+                                                            a.CompanyId == model.CompanyId &&
+                                                            a.CompanySiteId == model.CompanySiteId &&
+                                                            a.IsValid &&
+                                                            a.Id != model.Id
+                                                           );
+
+
+            }
+            else
+            {
+                nameExits = await work.Organigram.AnyAsync(a =>
+                                                           a.Name.ToLower() == model.Name.ToLower() &&
+                                                           a.CompanyId == model.CompanyId &&
+                                                           a.CompanySiteId == model.CompanySiteId &&
+                                                           a.IsValid
+                                                          );
+            }
+            if (nameExits)
+            {
+                throw new HRMSException("Position already exists");
+            }
+
         }
+
         public async Task<Response> CreateAsync(Organigram model)
         {
             var result = new Response() { IsSuccessful = true };
             try
             {
-                if (model.CompanySiteId == Guid.Empty || string.IsNullOrEmpty(model.Name))
-                {
-                    throw new HRMSException("Please enter correct Info(Name,CompanySite)");
-                }
-                if (await DoesOrganigramExistAsync(model.Name, model.CompanySiteId, null))
-                {
-                    throw new HRMSException("Site already exists");
-                }
-                if (model.RespondsToId == Guid.Empty)
-                {
-                    model.RespondsToId = null;
-                }
+                model.Id = Guid.NewGuid();
+                await IsModelValid(model);
+
                 await work.Organigram.InsertAsync(model);
                 await work.SaveChangesAsync();
 
@@ -51,19 +87,13 @@ namespace HRMS.Core.Services
             }
             return result;
         }
+
         public async Task<Response> EditAsync(Organigram model)
         {
             var result = new Response { IsSuccessful = true };
             try
             {
-                if (model.CompanySiteId == Guid.Empty || string.IsNullOrEmpty(model.Name))
-                {
-                    throw new HRMSException("Please enter correct Info(Name,CompanySite)");
-                }
-                if (await DoesOrganigramExistAsync(model.Name, model.CompanySiteId, model.Id))
-                {
-                    throw new HRMSException("Site already exists");
-                }
+                await IsModelValid(model, true);
                 var currentEntity = await work.Organigram.GetByIdAsync(model.Id);
                 if (currentEntity == null)
                 {
@@ -72,14 +102,8 @@ namespace HRMS.Core.Services
                 currentEntity.Name = model.Name;
                 currentEntity.IsCeo = model.IsCeo;
                 currentEntity.CompanySiteId = model.CompanySiteId;
-                if (model.RespondsToId != Guid.Empty)
-                {
-                    currentEntity.RespondsToId = model.RespondsToId;
-                }
-                else
-                {
-                    model.RespondsToId = null;
-                }
+                currentEntity.RespondsToId = model.RespondsToId;
+
 
                 await work.Organigram.UpdateAsync(currentEntity);
                 await work.SaveChangesAsync();
@@ -92,7 +116,6 @@ namespace HRMS.Core.Services
             }
             return result;
         }
-
 
         public async Task<Response> DeleteAsync(Guid id)
         {
@@ -112,14 +135,30 @@ namespace HRMS.Core.Services
             return result;
         }
 
-
-
         public async Task<Response<IEnumerable<Organigram>>> GetAllAsync(Guid? companyId)
         {
             var result = new Response<IEnumerable<Organigram>> { IsSuccessful = true };
             try
             {
-                result.Result = await work.Organigram.WhereAsync(a => a.IsValid, a => a.RespondsTo, a => a.CompanySite, a => a.CompanySite.Site, a => a.CompanySite.Company);
+                if (companyId.HasValue)
+                {
+                    result.Result = await work.Organigram.WhereAsync(
+                                                                        a => a.IsValid && a.CompanyId == companyId,
+                                                                        a => a.RespondsTo,
+                                                                        a => a.CompanySite,
+                                                                        a => a.CompanySite.Site, 
+                                                                        a => a.Company);
+                }
+                else
+                {
+                    result.Result = await work.Organigram.WhereAsync(
+                                                                        a => a.IsValid,
+                                                                        a => a.RespondsTo,
+                                                                        a => a.CompanySite, 
+                                                                        a => a.CompanySite.Site,
+                                                                        a => a.Company
+                                                                        );
+                }
 
             }
             catch (Exception ex)
@@ -174,7 +213,7 @@ namespace HRMS.Core.Services
             try
             {
                 var data =
-                     await work.OrganigramEmployee.FirstOrDefault(a => a.IsValid && a.Id==id, a => a.Organigram, a => a.Employee);
+                     await work.OrganigramEmployee.FirstOrDefault(a => a.IsValid && a.Id == id, a => a.Organigram, a => a.Employee);
                 result.Result = data;
 
             }

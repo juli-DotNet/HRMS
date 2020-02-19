@@ -15,5 +15,7 @@ namespace HRMS.Core.Services.Interfaces
         Task<Response<IEnumerable<CompanySite>>> GetCompanySitesAsync(string search,Guid? company);
         Task<Response<IEnumerable<Employee>>> GetAllContactsAsync(string search);
         Task<Response<IEnumerable<Organigram>>> GetOrganigramsAsync(string search,Guid? companySiteId);
+        Task<Response<IEnumerable<Organigram>>> GetCompanyOrganigramsAsync(Guid companySiteId);
+        Task<Response<IEnumerable<OrganigramEmployee>>> GetCompanyEmployesAsync(Guid companyId);
     }
 }

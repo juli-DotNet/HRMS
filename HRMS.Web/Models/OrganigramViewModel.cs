@@ -8,10 +8,12 @@ namespace HRMS.Web.Models
         [Required]
         public string Name { get; set; }
         public Guid Id { get; set; }
-        public Guid CompanySiteId { get;  set; }
+        public Guid? CompanySiteId { get;  set; }
+        public Guid CompanyId { get;  set; }
         public bool IsCeo { get;  set; }
         public Guid RespondsToId { get;  set; }
         public string CompanySite { get;  set; }
+        public string Company { get;  set; }
         public string RespondsTo { get;  set; }
     }
 }

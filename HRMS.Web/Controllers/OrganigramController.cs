@@ -12,14 +12,17 @@ namespace HRMS.Web.Controllers
     public class OrganigramController : Controller
     {
         private readonly IOrganigramService organigram;
+        private readonly ICompanyService companyService;
 
-        public OrganigramController(IOrganigramService organigram)
+        public OrganigramController(IOrganigramService organigram, ICompanyService companyService)
         {
             this.organigram = organigram;
+            this.companyService = companyService;
         }
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(Guid companyId)
         {
-            var result = await organigram.GetAllAsync(null);
+            ViewBag.companyId = companyId;
+            var result = await organigram.GetAllAsync(companyId);
             if (!result.IsSuccessful)
             {
                 ModelState.AddModelError("", result.Message);
@@ -30,9 +33,15 @@ namespace HRMS.Web.Controllers
 
         }
 
-        public ActionResult Create()
+        public async Task<ActionResult> Create(Guid companyId)
         {
-            var model = new OrganigramViewModel();
+            var company = await companyService.GetByIdAsync(companyId);
+            if (!company.IsSuccessful)
+            {
+                ModelState.AddModelError("", company.Message);
+                return View(new OrganigramViewModel());
+            }
+            var model = new OrganigramViewModel() { CompanyId = companyId, Company = company.Result.Name };
             return View(model);
         }
 
@@ -50,23 +59,10 @@ namespace HRMS.Web.Controllers
                     ModelState.AddModelError("", result.Message);
                     return View(model);
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("Edit", "Company", new { id = model.CompanyId });
             }
             return View(model);
         }
-
-        public async Task<ActionResult> Details(Guid id)
-        {
-            var response = await organigram.GetByIdAsync(id);
-
-            if (!response.IsSuccessful)
-            {
-                ModelState.AddModelError("", response.Message);
-                return View(new OrganigramViewModel());
-            }
-            return View(Parse(response.Result));
-        }
-
         public async Task<ActionResult> Edit(Guid id)
         {
             var response = await organigram.GetByIdAsync(id);
@@ -97,6 +93,20 @@ namespace HRMS.Web.Controllers
             return View(model);
         }
 
+        public async Task<ActionResult> Details(Guid id)
+        {
+            var response = await organigram.GetByIdAsync(id);
+
+            if (!response.IsSuccessful)
+            {
+                ModelState.AddModelError("", response.Message);
+                return View(new OrganigramViewModel());
+            }
+            return View(Parse(response.Result));
+        }
+
+
+
         public async Task<ActionResult> Delete(Guid id)
         {
             var response = await organigram.DeleteAsync(id);
@@ -106,7 +116,6 @@ namespace HRMS.Web.Controllers
                 ErrorMessage = response.Message
             });
         }
-
 
         public async Task<ActionResult> DeleteHistory(Guid id)
         {
@@ -250,7 +259,8 @@ namespace HRMS.Web.Controllers
                 Id = model.Id,
                 IsCeo = model.IsCeo,
                 CompanySiteId = model.CompanySiteId,
-                RespondsToId = model.RespondsToId
+                RespondsToId = model.RespondsToId,
+                CompanyId = model.CompanyId
             };
         }
         private static OrganigramViewModel Parse(Organigram model)
@@ -261,9 +271,11 @@ namespace HRMS.Web.Controllers
                 Id = model.Id,
                 IsCeo = model.IsCeo,
                 CompanySiteId = model.CompanySiteId,
+                CompanyId = model.CompanyId,
                 RespondsToId = model.RespondsToId ?? Guid.Empty,
-                CompanySite = string.Concat(model.CompanySite.Company.Name, ":", model.CompanySite.Site.Name),
-                RespondsTo = string.Concat(model.RespondsTo?.Name ?? "")
+                CompanySite = model.CompanySite == null ? "" : string.Concat(model.CompanySite.Site.Name),
+                RespondsTo = string.Concat(model.RespondsTo?.Name ?? ""),
+                Company = model.Company.Name
             };
         }
         #endregion

@@ -95,6 +95,25 @@
 </div>
 
 
+<div class="list-header"></div>
+<div class="row">
+    <div class="col-md-10">
+        <h3 class="d-inline">Organigram of Company </h3>
+    </div>
+    <div class="col-md-2">
+        <a asp-action="Create" asp-controller="Organigram" asp-route-companyId="@Model.Id" class="btn btn-success">Add</a>
+        <a asp-action="Index" asp-controller="Organigram" asp-route-companyId="@Model.Id" class="btn btn-success">List</a>
+    </div>
+</div>
+<hr />
+<div class="list-header"></div>
+<div class="row">
+    <div class="col-md-12">
+        <div id="chart-container"></div>
+
+    </div>
+</div>
+
 <div class="modal" id="add-site-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -243,7 +262,7 @@
             $('#add-site-modal').on('shown.bs.modal', function (e) {
                 $("#ModalErrorMessage").hide();
             })
-           
+
 
             $("#confirmAddSite").on("click", function () {
 
@@ -274,7 +293,7 @@
               });
 
             });
-            
+
 
             $(".table").on("click",".removeLinkedSite", function (e) {
                 var siteId = $(this).attr("data-site-id");
@@ -287,9 +306,9 @@
 
             $("#confirmRemoveSite").on("click", function (event) {
                 event.preventDefault();
-                
+
                 var id = $(this).attr("data-site-id");
-               
+
                 $.ajax
                     ({
                         type: "POST",
@@ -310,6 +329,31 @@
                     });
                 return false;
             });
+
+        });
+
+    </script>
+
+    <link rel="stylesheet" href="~/css/font-awesome.css">
+    <link rel="stylesheet" href="~/css/jquery.orgchart.css">
+
+    <script src="~/js/html2canvas.js"></script>
+    <script src="~/js/jquery.orgchart.js"></script>
+    <script>
+        $(function () {
+           
+             $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("GetCompanyOrganigrams", "Json",new { companyId=Model.Id})",
+                        success: function (data) {
+                            console.log(data);
+                                 $('#chart-container').orgchart({
+                                    'data': data.items[0],
+                                    'nodeTitle': 'title',
+                                    'nodeContent': 'name'
+                            });
+                        }
+                    });
 
         });
 

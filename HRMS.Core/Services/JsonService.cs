@@ -172,7 +172,34 @@ namespace HRMS.Core.Services
             }
             return result;
         }
-
+        public async Task<Response<IEnumerable<Organigram>>> GetCompanyOrganigramsAsync(Guid companyId)
+        {
+            var result = new Response<IEnumerable<Organigram>> { IsSuccessful = true };
+            try
+            {
+                result.Result = await work.Organigram.WhereAsync(a => a.IsValid && a.CompanyId == companyId);
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
+        }
+        public async Task<Response<IEnumerable<OrganigramEmployee>>> GetCompanyEmployesAsync(Guid companyId)
+        {
+            var result = new Response<IEnumerable<OrganigramEmployee>> { IsSuccessful = true };
+            try
+            {
+                result.Result = await work.OrganigramEmployee.WhereAsync(a => a.IsValid && a.Organigram.CompanyId == companyId);
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
+        }
         public async Task<Response<IEnumerable<CompanySite>>> GetCompanySitesAsync(string search, Guid? companyId)
         {
             var result = new Response<IEnumerable<CompanySite>> { IsSuccessful = true };
