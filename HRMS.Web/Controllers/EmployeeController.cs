@@ -19,7 +19,7 @@ namespace HRMS.Web.Controllers
         }
         public async Task<ActionResult> Index()
         {
-            var result = await employeeService.GetAllAsync(null);
+            var result = await employeeService.GetAllAsync();
             if (!result.IsSuccessful)
             {
                 ModelState.AddModelError("", result.Message);

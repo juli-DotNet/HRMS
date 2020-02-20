@@ -9,13 +9,13 @@ namespace HRMS.Core.Services.Interfaces
         IRepository<Address> Address { get; }
         IRepository<City> City { get;  }
         IRepository<Company> Company { get;}
-        IRepository<CompanySite> CompanySite { get; }
+        IRepository<CompanyDepartament> CompanyDepartament { get; }
         IRepository<Country> Country { get; }
         IRepository<Employee> Employee { get;}
         IRepository<Organigram> Organigram { get;}
         IRepository<OrganigramEmployee> OrganigramEmployee { get; }
         IRepository<Region> Region { get;  }
-        IRepository<Site> Site { get;  }
+        IRepository<Departament> Departament { get;  }
 
         Task SaveChangesAsync();
     }

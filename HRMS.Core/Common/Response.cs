@@ -27,7 +27,11 @@ namespace HRMS.Core.Common
                 {
                     return Exception.Message;
                 }
-                return "An error has happened,please contact administrator";
+                else if (Exception != null)
+                {
+                    return "An error has happened,please contact administrator";
+                }
+                return "";
             }
         }
     }

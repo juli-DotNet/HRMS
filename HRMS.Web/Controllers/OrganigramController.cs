@@ -262,7 +262,7 @@ namespace HRMS.Web.Controllers
                 Name = model.Name,
                 Id = model.Id,
                 IsCeo = model.IsCeo,
-                CompanySiteId = model.CompanySiteId,
+                CompanyDepartamentId = model.CompanySiteId,
                 RespondsToId = model.RespondsToId,
                 CompanyId = model.CompanyId
             };
@@ -274,10 +274,10 @@ namespace HRMS.Web.Controllers
                 Name = model.Name,
                 Id = model.Id,
                 IsCeo = model.IsCeo,
-                CompanySiteId = model.CompanySiteId,
+                CompanySiteId = model.CompanyDepartamentId,
                 CompanyId = model.CompanyId,
                 RespondsToId = model.RespondsToId ?? Guid.Empty,
-                CompanySite = model.CompanySite == null ? "" : string.Concat(model.CompanySite.Site.Name),
+                CompanySite = model.CompanyDepartament == null ? "" : string.Concat(model.CompanyDepartament.Departament.Name),
                 RespondsTo = string.Concat(model.RespondsTo?.Name ?? ""),
                 Company = model.Company.Name
             };

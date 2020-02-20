@@ -17,6 +17,7 @@ namespace HRMS.Core.Services
             this.work = work;
             this.address = address;
         }
+
         private async Task<bool> DoesEmployeeExistAsync(string name, string lastName, DateTime bithDate, Guid? id)
         {
             var result = id.HasValue ? await work.Employee.AnyAsync(a => a.Name.ToLower() == name.ToLower() && a.LastName.ToLower() == lastName.ToLower() && a.IsValid && a.Id != id)
@@ -109,21 +110,12 @@ namespace HRMS.Core.Services
             return result;
         }
 
-        public async Task<Response<IEnumerable<Employee>>> GetAllAsync(Guid? companyId)
+        public async Task<Response<IEnumerable<Employee>>> GetAllAsync()
         {
             var result = new Response<IEnumerable<Employee>> { IsSuccessful = true };
             try
             {
-                if (companyId.HasValue)
-                {
-                    //TD
-                    result.Result = await work.Employee.WhereAsync(a => a.IsValid, a => a.Contact, a => a.Address, a => a.Address.City, a => a.Address.Region, a => a.Address.Country);
-                }
-                else
-                {
-                    result.Result = await work.Employee.WhereAsync(a => a.IsValid, a => a.Contact, a => a.Address, a => a.Address.City, a => a.Address.Region, a => a.Address.Country);
-                }
-
+                result.Result = await work.Employee.WhereAsync(a => a.IsValid, a => a.Contact, a => a.Address, a => a.Address.City, a => a.Address.Region, a => a.Address.Country);
             }
             catch (Exception ex)
             {

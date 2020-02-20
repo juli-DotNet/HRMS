@@ -11,19 +11,19 @@ namespace HRMS.Web.Controllers
 {
     public class CompanySiteController : Controller
     {
-        private readonly ICompanySiteService companySiteService;
+        private readonly ICompanyDepartamentService companyDepartamentService;
         private readonly ICompanyService companyService;
 
-        public CompanySiteController(ICompanySiteService companySiteService,ICompanyService companyService)
+        public CompanySiteController(ICompanyDepartamentService companyDepartamentService,ICompanyService companyService)
         {
-            this.companySiteService = companySiteService;
+            this.companyDepartamentService = companyDepartamentService;
             this.companyService = companyService;
         }
 
         public async Task<ActionResult> Index(Guid companyId)
         {
             ViewBag.companyId = companyId;
-            var result = await companySiteService.GetAllAsync(companyId);
+            var result = await companyDepartamentService.GetAllAsync(companyId);
             if (!result.IsSuccessful)
             {
                 ModelState.AddModelError("", result.Message);
@@ -36,7 +36,7 @@ namespace HRMS.Web.Controllers
         public async Task<ActionResult> Details(Guid id)
         {
            
-            var response = await companySiteService.GetById(id);
+            var response = await companyDepartamentService.GetByIdAsync(id);
 
             if (!response.IsSuccessful)
             {
@@ -56,7 +56,7 @@ namespace HRMS.Web.Controllers
                 result.ErrorMessage = "Please select site";
             }
 
-            var linkResult = await companyService.RemoveLinkedSite(id);
+            var linkResult = await companyDepartamentService.DeleteAsync(id);
 
             if (linkResult.IsSuccessful)
             {
@@ -68,16 +68,68 @@ namespace HRMS.Web.Controllers
             }
             return Json(result);
         }
+        [HttpPost]
+        public async Task<ActionResult> LinkDepartment(Guid id, Guid siteId)
+        {
+            GenericViewModel result = new GenericViewModel();
+            if (siteId == Guid.Empty)
+            {
+                result.ErrorMessage = "Please select site";
+                return Json(result);
+            }
 
-        private CompanySiteViewModel Parse(CompanySite a)
+            var linkResult = await companyDepartamentService.CreateAsync(id, siteId);
+
+            if (linkResult.IsSuccessful)
+            {
+                result.IsSuccessful = true;
+            }
+            else
+            {
+                result.ErrorMessage = linkResult.Message;
+            }
+            return Json(result);
+        }
+      
+
+        //public async Task<ActionResult> LinkedSites(Guid id)
+        //{
+        //    var result = new LinkedSiteJsonModel();
+        //    var linkResult = await companyService.GetByIdAsync(id);
+
+        //    if (linkResult.IsSuccessful)
+        //    {
+        //        result.IsSuccessful = true;
+        //        result.Items = linkResult.Result.Select(a => Parse(a));
+        //    }
+        //    else
+        //    {
+        //        result.ErrorMessage = linkResult.Message;
+        //    }
+        //    return Json(result);
+        //}
+
+        //private DepartmentDto Parse(CompanyDepartament a)
+        //{
+        //    return new DepartmentDto
+        //    {
+        //        City = a.Site.Address.City.Name,
+        //        Region = a.Site.Address.Region.Name,
+        //        Country = a.Site.Address.Country.Name,
+        //        PostalCode = a.Site.Address.PostalCode,
+        //        Name = a.Name,
+        //        Id = a.Id
+        //    };
+        //}
+        private CompanySiteViewModel Parse(CompanyDepartament a)
         {
             return new CompanySiteViewModel
             {
                 Company = a.Company.Name,
                 Id = a.Id,
                 CompanyId = a.CompanyId,
-                Site = a.Site.Name,
-                SiteId = a.SiteId
+                Site = a.Departament.Name,
+                SiteId = a.DepartamentId
             };
         }
     }

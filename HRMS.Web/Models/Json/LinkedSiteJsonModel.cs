@@ -4,6 +4,6 @@ namespace HRMS.Web.Models
 {
     public class LinkedSiteJsonModel : GenericViewModel
     {
-        public IEnumerable<SiteDto> Items { get; set; }
+        public IEnumerable<DepartmentDto> Items { get; set; }
     }
 }

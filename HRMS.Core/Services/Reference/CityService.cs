@@ -126,15 +126,15 @@ namespace HRMS.Core.Services
             {
                 if (regionId.HasValue && regionId.Value > 0)
                 {
-                    result.Result = await work.City.WhereAsync(a => a.IsValid && a.RegionId == regionId);
+                    result.Result = await work.City.WhereAsync(a => a.IsValid && a.RegionId == regionId,a=>a.Country,a=>a.Region);
                 }
                 else if (counryId.HasValue && counryId.Value > 0)
                 {
-                    result.Result = await work.City.WhereAsync(a => a.IsValid && a.CountryId == counryId);
+                    result.Result = await work.City.WhereAsync(a => a.IsValid && a.CountryId == counryId, a => a.Country, a => a.Region);
                 }
                 else
                 {
-                    result.Result = await work.City.WhereAsync(a => a.IsValid);
+                    result.Result = await work.City.WhereAsync(a => a.IsValid, a => a.Country, a => a.Region);
                 }
 
             }
@@ -151,9 +151,7 @@ namespace HRMS.Core.Services
             var result = new Response<City> { IsSuccessful = true };
             try
             {
-                result.Result = await work.City.GetByIdAsync(id);
-                result.Result.Country = await work.Country.GetByIdAsync(result.Result.CountryId);
-                result.Result.Region = await work.Region.GetByIdAsync(result.Result.RegionId);
+                result.Result = await work.City.FirstOrDefault(a=>a.Id==id, a => a.Country, a => a.Region);
             }
             catch (Exception ex)
             {

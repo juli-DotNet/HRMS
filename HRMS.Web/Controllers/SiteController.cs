@@ -11,9 +11,9 @@ namespace HRMS.Web.Controllers
 {
     public class SiteController : Controller
     {
-        private readonly ISiteService siteService;
+        private readonly IDepartamentService siteService;
 
-        public SiteController(ISiteService siteService)
+        public SiteController(IDepartamentService siteService)
         {
             this.siteService = siteService;
         }
@@ -108,40 +108,31 @@ namespace HRMS.Web.Controllers
             });
         }
 
-        private static Site Parse(SiteViewModel model)
+        private static Departament Parse(SiteViewModel model)
         {
-            return new Site
+            return new Departament
             {
                 Name = model.Name,
                 Id = model.Id,
-                Address = new Address
-                {
+                //Address = new Address
+                //{
 
-                    Id = model.AddressId,
-                    StreetName = model.StreetName,
-                    PostalCode = model.PostalCode,
-                    CountryId = model.CountryId,
-                    RegionId = model.RegionId,
-                    CityId = model.CityId
+                //    Id = model.AddressId,
+                //    StreetName = model.StreetName,
+                //    PostalCode = model.PostalCode,
+                //    CountryId = model.CountryId,
+                //    RegionId = model.RegionId,
+                //    CityId = model.CityId
 
-                }
+                //}
             };
         }
-        private static SiteViewModel Parse(Site model)
+        private static SiteViewModel Parse(Departament model)
         {
             return new SiteViewModel
             {
                 Name = model.Name,
-                Id = model.Id,
-                City = model.Address.City.Name,
-                CityId = model.Address.CityId,
-                Country = model.Address.Country.Name,
-                CountryId = model.Address.CountryId,
-                Region = model.Address.Region.Name,
-                RegionId = model.Address.RegionId,
-                AddressId = model.AddressId,
-                PostalCode = model.Address.PostalCode,
-                StreetName = model.Address.StreetName
+                Id = model.Id
             };
         }
 

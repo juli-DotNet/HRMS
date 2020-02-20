@@ -20,13 +20,13 @@ namespace HRMS.Persistance
         public DbSet<Address> Address { get; set; }
         public DbSet<City> City { get; set; }
         public DbSet<Company> Company { get; set; }
-        public DbSet<CompanySite> CompanySite { get; set; }
+        public DbSet<CompanyDepartament> CompanyDepartament { get; set; }
         public DbSet<Country> Country { get; set; }
         public DbSet<Employee> Employee { get; set; }
         public DbSet<Organigram> Organigram { get; set; }
         public DbSet<OrganigramEmployee> OrganigramEmployee { get; set; }
         public DbSet<Region> Region { get; set; }
-        public DbSet<Site> Site { get; set; }
+        public DbSet<Departament> Departament { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -11,7 +11,7 @@ namespace HRMS.Core.Services.Interfaces
         Task<Response> CreateAsync(Employee model);
         Task<Response> DeleteAsync(Guid id);
         Task<Response> EditAsync(Employee model);
-        Task<Response<IEnumerable<Employee>>> GetAllAsync(Guid? companyId);
+        Task<Response<IEnumerable<Employee>>> GetAllAsync();
         Task<Response<Employee>> GetByIdAsync(Guid id);
     }
 }

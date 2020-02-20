@@ -103,9 +103,9 @@ namespace HRMS.Core.Services
             return result;
         }
 
-        public async Task<Response<IEnumerable<Site>>> GetAllSitesAsync(string search, Guid? companyId)
+        public async Task<Response<IEnumerable<Departament>>> GetAllDepartmentsAsync(string search, Guid? companyId)
         {
-            var result = new Response<IEnumerable<Site>> { IsSuccessful = true };
+            var result = new Response<IEnumerable<Departament>> { IsSuccessful = true };
             try
             {
                 if (string.IsNullOrEmpty(search))
@@ -114,11 +114,11 @@ namespace HRMS.Core.Services
                 }
                 if (companyId.HasValue)
                 {
-                    result.Result = (await work.CompanySite.WhereAsync(a => a.IsValid && a.Site.Name.ToLower().Contains(search.ToLower()) && a.CompanyId == companyId.Value, a => a.Site))?.Select(a => a.Site);
+                    result.Result = (await work.CompanyDepartament.WhereAsync(a => a.IsValid && a.Departament.Name.ToLower().Contains(search.ToLower()) && a.CompanyId == companyId.Value, a => a.Departament))?.Select(a => a.Departament);
                 }
                 else
                 {
-                    result.Result = (await work.CompanySite.WhereAsync(a => a.IsValid && a.Site.Name.ToLower().Contains(search.ToLower()), a => a.Site))?.Select(a => a.Site);
+                    result.Result = (await work.CompanyDepartament.WhereAsync(a => a.IsValid && a.Departament.Name.ToLower().Contains(search.ToLower()), a => a.Departament))?.Select(a => a.Departament);
                 }
 
 
@@ -158,7 +158,7 @@ namespace HRMS.Core.Services
             {
                 if (companySiteId.HasValue)
                 {
-                    result.Result = await work.Organigram.WhereAsync(a => a.IsValid && a.Name.ToLower().Contains(search.ToLower()) && a.CompanySiteId == companySiteId);
+                    result.Result = await work.Organigram.WhereAsync(a => a.IsValid && a.Name.ToLower().Contains(search.ToLower()) && a.CompanyDepartamentId == companySiteId);
                 }
                 else
                 {
@@ -206,7 +206,7 @@ namespace HRMS.Core.Services
             var result = new Response<IEnumerable<Organigram>> { IsSuccessful = true };
             try
             {
-                result.Result = await work.Organigram.WhereAsync(a => a.IsValid && a.CompanySiteId == id);
+                result.Result = await work.Organigram.WhereAsync(a => a.IsValid && a.CompanyDepartamentId == id);
             }
             catch (Exception ex)
             {
@@ -220,7 +220,7 @@ namespace HRMS.Core.Services
             var result = new Response<IEnumerable<OrganigramEmployee>> { IsSuccessful = true };
             try
             {
-                result.Result = await work.OrganigramEmployee.WhereAsync(a => a.IsValid && a.Organigram.CompanySiteId == id, a => a.Employee,a=>a.Organigram);
+                result.Result = await work.OrganigramEmployee.WhereAsync(a => a.IsValid && a.Organigram.CompanyDepartamentId == id, a => a.Employee,a=>a.Organigram);
             }
             catch (Exception ex)
             {
@@ -229,9 +229,9 @@ namespace HRMS.Core.Services
             }
             return result;
         }
-        public async Task<Response<IEnumerable<CompanySite>>> GetCompanySitesAsync(string search, Guid? companyId)
+        public async Task<Response<IEnumerable<CompanyDepartament>>> GetCompanyDepartmentsAsync(string search, Guid? companyId)
         {
-            var result = new Response<IEnumerable<CompanySite>> { IsSuccessful = true };
+            var result = new Response<IEnumerable<CompanyDepartament>> { IsSuccessful = true };
             try
             {
                 if (string.IsNullOrEmpty(search))
@@ -240,11 +240,11 @@ namespace HRMS.Core.Services
                 }
                 if (companyId.HasValue)
                 {
-                    result.Result = (await work.CompanySite.WhereAsync(a => a.IsValid && (a.Site.Name.ToLower().Contains(search.ToLower()) || a.Company.Name.ToLower().Contains(search.ToLower())) && a.CompanyId == companyId.Value, a => a.Site, a => a.Company));
+                    result.Result = (await work.CompanyDepartament.WhereAsync(a => a.IsValid && (a.Departament.Name.ToLower().Contains(search.ToLower()) || a.Company.Name.ToLower().Contains(search.ToLower())) && a.CompanyId == companyId.Value, a => a.Departament, a => a.Company));
                 }
                 else
                 {
-                    result.Result = (await work.CompanySite.WhereAsync(a => a.IsValid && (a.Site.Name.ToLower().Contains(search.ToLower()) || a.Company.Name.ToLower().Contains(search.ToLower())), a => a.Site, a => a.Company));
+                    result.Result = (await work.CompanyDepartament.WhereAsync(a => a.IsValid && (a.Departament.Name.ToLower().Contains(search.ToLower()) || a.Company.Name.ToLower().Contains(search.ToLower())), a => a.Departament, a => a.Company));
                 }
             }
             catch (Exception ex)

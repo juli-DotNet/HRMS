@@ -27,11 +27,11 @@ namespace HRMS.Core.Services
             {
                 model.RespondsToId = null;
             }
-            if (model.CompanySiteId == Guid.Empty)
+            if (model.CompanyDepartamentId == Guid.Empty)
             {
-                model.CompanySiteId = null;
+                model.CompanyDepartamentId = null;
             }
-            if (model.CompanySiteId.HasValue && !model.IsCeo)
+            if (model.CompanyDepartamentId.HasValue && !model.IsCeo)
             {
                 throw new HRMSException("This position should have a boss (respondsTo)");
             }
@@ -44,7 +44,7 @@ namespace HRMS.Core.Services
                 nameExits = await work.Organigram.AnyAsync(a =>
                                                             a.Name.ToLower() == model.Name.ToLower() &&
                                                             a.CompanyId == model.CompanyId &&
-                                                            a.CompanySiteId == model.CompanySiteId &&
+                                                            a.CompanyDepartamentId == model.CompanyDepartamentId &&
                                                             a.IsValid &&
                                                             a.Id != model.Id
                                                            );
@@ -56,7 +56,7 @@ namespace HRMS.Core.Services
                 nameExits = await work.Organigram.AnyAsync(a =>
                                                            a.Name.ToLower() == model.Name.ToLower() &&
                                                            a.CompanyId == model.CompanyId &&
-                                                           a.CompanySiteId == model.CompanySiteId &&
+                                                           a.CompanyDepartamentId == model.CompanyDepartamentId &&
                                                            a.IsValid
                                                           );
             }
@@ -101,7 +101,7 @@ namespace HRMS.Core.Services
                 }
                 currentEntity.Name = model.Name;
                 currentEntity.IsCeo = model.IsCeo;
-                currentEntity.CompanySiteId = model.CompanySiteId;
+                currentEntity.CompanyDepartamentId = model.CompanyDepartamentId;
                 currentEntity.RespondsToId = model.RespondsToId;
 
 
@@ -145,8 +145,8 @@ namespace HRMS.Core.Services
                     result.Result = await work.Organigram.WhereAsync(
                                                                         a => a.IsValid && a.CompanyId == companyId,
                                                                         a => a.RespondsTo,
-                                                                        a => a.CompanySite,
-                                                                        a => a.CompanySite.Site, 
+                                                                        a => a.CompanyDepartament,
+                                                                        a => a.CompanyDepartament.Departament, 
                                                                         a => a.Company);
                 }
                 else
@@ -154,8 +154,8 @@ namespace HRMS.Core.Services
                     result.Result = await work.Organigram.WhereAsync(
                                                                         a => a.IsValid,
                                                                         a => a.RespondsTo,
-                                                                        a => a.CompanySite, 
-                                                                        a => a.CompanySite.Site,
+                                                                        a => a.CompanyDepartament, 
+                                                                        a => a.CompanyDepartament.Departament,
                                                                         a => a.Company
                                                                         );
                 }
@@ -175,7 +175,7 @@ namespace HRMS.Core.Services
             try
             {
                 result.Result = await work.Organigram.FirstOrDefault(a => a.Id == id,
-                    a => a.RespondsTo, a => a.CompanySite, a => a.CompanySite.Site, a => a.Company);
+                    a => a.RespondsTo, a => a.CompanyDepartament, a => a.CompanyDepartament.Departament, a => a.Company);
 
             }
             catch (Exception ex)
