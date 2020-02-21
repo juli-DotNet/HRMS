@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HRMS.Web.Models.SiteViewModel>
+﻿@model IEnumerable<HRMS.Web.Models.DepartmentViewModel>
 
 @{
     ViewData["Title"] = "Compnay";
@@ -21,15 +21,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Country)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Region)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.City)
-                </th>
+                
                 <th class="no-sort">Actions</th>
             </tr>
         </thead>
@@ -40,15 +32,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Country)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Region)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.City)
-                </td>
+               
                 <td class="actions">
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info ">Details </a>
 

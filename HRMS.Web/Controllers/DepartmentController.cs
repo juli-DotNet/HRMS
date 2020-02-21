@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HRMS.Web.Controllers
 {
-    public class SiteController : Controller
+    public class DepartmentController : Controller
     {
         private readonly IDepartamentService siteService;
 
-        public SiteController(IDepartamentService siteService)
+        public DepartmentController(IDepartamentService siteService)
         {
             this.siteService = siteService;
         }
@@ -24,7 +24,7 @@ namespace HRMS.Web.Controllers
             if (!result.IsSuccessful)
             {
                 ModelState.AddModelError("", result.Message);
-                return View(new List<SiteViewModel>());
+                return View(new List<DepartmentViewModel>());
             }
             var list = result.Result.Select(a => Parse(a));
             return View(list);
@@ -33,13 +33,13 @@ namespace HRMS.Web.Controllers
 
         public ActionResult Create()
         {
-            var model = new SiteViewModel();
+            var model = new DepartmentViewModel();
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(SiteViewModel model)
+        public async Task<ActionResult> Create(DepartmentViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -81,7 +81,7 @@ namespace HRMS.Web.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(SiteViewModel model)
+        public async Task<ActionResult> Edit(DepartmentViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -108,28 +108,17 @@ namespace HRMS.Web.Controllers
             });
         }
 
-        private static Departament Parse(SiteViewModel model)
+        private static Departament Parse(DepartmentViewModel model)
         {
             return new Departament
             {
                 Name = model.Name,
-                Id = model.Id,
-                //Address = new Address
-                //{
-
-                //    Id = model.AddressId,
-                //    StreetName = model.StreetName,
-                //    PostalCode = model.PostalCode,
-                //    CountryId = model.CountryId,
-                //    RegionId = model.RegionId,
-                //    CityId = model.CityId
-
-                //}
+                Id = model.Id
             };
         }
-        private static SiteViewModel Parse(Departament model)
+        private static DepartmentViewModel Parse(Departament model)
         {
-            return new SiteViewModel
+            return new DepartmentViewModel
             {
                 Name = model.Name,
                 Id = model.Id
