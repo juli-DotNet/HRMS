@@ -114,11 +114,14 @@ namespace HRMS.Core.Services
                 }
                 if (companyId.HasValue)
                 {
-                    result.Result = (await work.CompanyDepartament.WhereAsync(a => a.IsValid && a.Departament.Name.ToLower().Contains(search.ToLower()) && a.CompanyId == companyId.Value, a => a.Departament))?.Select(a => a.Departament);
+                    var currentDepartments = (await work.CompanyDepartament.WhereAsync(a => a.IsValid))?.Select(a => a.DepartamentId).ToList();
+                    result.Result = await work.Departament.WhereAsync(a =>
+                                                                                a.IsValid && a.Name.ToLower().Contains(search.ToLower()) &&
+                                                                                !currentDepartments.Contains(a.Id));
                 }
                 else
                 {
-                    result.Result = (await work.CompanyDepartament.WhereAsync(a => a.IsValid && a.Departament.Name.ToLower().Contains(search.ToLower()), a => a.Departament))?.Select(a => a.Departament);
+                    result.Result = await work.Departament.WhereAsync(a => a.IsValid && a.Name.ToLower().Contains(search.ToLower()));
                 }
 
 
@@ -191,7 +194,7 @@ namespace HRMS.Core.Services
             var result = new Response<IEnumerable<OrganigramEmployee>> { IsSuccessful = true };
             try
             {
-                result.Result = await work.OrganigramEmployee.WhereAsync(a => a.IsValid && a.Organigram.CompanyId == companyId, a => a.Employee,a=>a.Organigram);
+                result.Result = await work.OrganigramEmployee.WhereAsync(a => a.IsValid && a.Organigram.CompanyId == companyId, a => a.Employee, a => a.Organigram);
             }
             catch (Exception ex)
             {
@@ -220,7 +223,7 @@ namespace HRMS.Core.Services
             var result = new Response<IEnumerable<OrganigramEmployee>> { IsSuccessful = true };
             try
             {
-                result.Result = await work.OrganigramEmployee.WhereAsync(a => a.IsValid && a.Organigram.CompanyDepartamentId == id, a => a.Employee,a=>a.Organigram);
+                result.Result = await work.OrganigramEmployee.WhereAsync(a => a.IsValid && a.Organigram.CompanyDepartamentId == id, a => a.Employee, a => a.Organigram);
             }
             catch (Exception ex)
             {

@@ -6,8 +6,8 @@ namespace HRMS.Web.Models
     {
         public Guid Id { get; set; }
         public Guid CompanyId { get; set; }
-        public Guid SiteId { get; set; }
-        public string Site { get; set; }
+        public Guid DepartmentId { get; set; }
+        public string Department { get; set; }
         public string Company { get; set; }
 
     }

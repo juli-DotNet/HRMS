@@ -90,7 +90,36 @@ namespace HRMS.Web.Controllers
             }
             return Json(result);
         }
-      
+
+
+        public async Task<ActionResult> GetLinkedDepartments(Guid id)
+        {
+            var result = new LinkedDepartmentsJsonModel();
+          
+
+            var linkResult = await companyDepartamentService.GetAllAsync(id);
+
+            if (linkResult.IsSuccessful)
+            {
+                result.IsSuccessful = true;
+                result.Items = linkResult.Result.Select(a => ParseJson(a));
+            }
+            else
+            {
+                result.ErrorMessage = linkResult.Message;
+            }
+            return Json(result);
+        }
+
+
+        private DepartmentDto ParseJson(CompanyDepartament a)
+        {
+            return new DepartmentDto
+            {
+                Name = a.Departament.Name,
+                Id = a.Id
+            };
+        }
         private CompanyDepartmentViewModel Parse(CompanyDepartament a)
         {
             return new CompanyDepartmentViewModel
@@ -98,8 +127,8 @@ namespace HRMS.Web.Controllers
                 Company = a.Company.Name,
                 Id = a.Id,
                 CompanyId = a.CompanyId,
-                Site = a.Departament.Name,
-                SiteId = a.DepartamentId
+                Department = a.Departament.Name,
+                DepartmentId = a.DepartamentId
             };
         }
     }

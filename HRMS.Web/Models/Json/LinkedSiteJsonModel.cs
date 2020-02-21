@@ -2,7 +2,7 @@
 
 namespace HRMS.Web.Models
 {
-    public class LinkedSiteJsonModel : GenericViewModel
+    public class LinkedDepartmentsJsonModel : GenericViewModel
     {
         public IEnumerable<DepartmentDto> Items { get; set; }
     }

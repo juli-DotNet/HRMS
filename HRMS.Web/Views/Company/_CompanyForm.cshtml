@@ -1,0 +1,62 @@
+﻿@model HRMS.Web.Models.CompanyViewModel
+
+<input asp-for="Id" hidden class="form-control" />
+<input asp-for="AddressId" hidden class="form-control" />
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="form-group">
+    <label asp-for="Name" class="control-label"></label>
+    <input asp-for="Name" class="form-control" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="NIPT" class="control-label"></label>
+    <input asp-for="NIPT" class="form-control" />
+    <span asp-validation-for="NIPT" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Description" class="control-label"></label>
+    <textarea asp-for="Description" class="form-control"></textarea>
+    <span asp-validation-for="Description" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="StreetName" class="control-label"></label>
+    <input asp-for="StreetName" class="form-control" />
+    <span asp-validation-for="StreetName" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="PostalCode" class="control-label"></label>
+    <input asp-for="PostalCode" class="form-control" />
+    <span asp-validation-for="PostalCode" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Country" class="control-label"></label>
+    <select asp-for="CountryId" class="form-control">
+        @if (Model.CountryId > 0)
+        {
+
+            <option selected value="@Model.CountryId">@Model.Country</option>
+        }
+    </select>
+    <span asp-validation-for="CountryId" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Region" class="control-label"></label>
+    <select asp-for="RegionId" class="form-control">
+        @if (Model.RegionId > 0)
+        {
+
+            <option selected value="@Model.RegionId">@Model.Region</option>
+        }
+    </select>
+    <span asp-validation-for="RegionId" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="City" class="control-label"></label>
+    <select asp-for="CityId" class="form-control selectRegionsAdd">
+        @if (Model.CityId > 0)
+        {
+            <option selected value="@Model.CityId">@Model.City</option>
+        }
+    </select>
+    <span asp-validation-for="CityId" class="text-danger"></span>
+</div>

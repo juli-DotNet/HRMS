@@ -345,13 +345,13 @@ namespace HRMS.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCompanyDepartmentOrganigrams(Guid companySiteId)
+        public async Task<IActionResult> GetCompanyDepartmentOrganigrams(Guid companyDeparmentId)
         {
             var result = new CompanyOrganigramJsonModel();
 
 
 
-            var companySiteResponse = await companyDepartmentService.GetByIdAsync(companySiteId);
+            var companySiteResponse = await companyDepartmentService.GetByIdAsync(companyDeparmentId);
 
             if (companySiteResponse.IsSuccessful)
             {
@@ -362,8 +362,8 @@ namespace HRMS.Web.Controllers
 
                 if (employeeResponse.IsSuccessful && organigramResponse.IsSuccessful)
                 {
-                    var employees = employeeResponse.Result.Where(a => a.Organigram.CompanyDepartamentId == companySiteId && (a.EndDate==null || a.EndDate >= DateTime.Now));
-                    var organigrams = organigramResponse.Result.Where(a => a.CompanyDepartamentId == companySiteId);
+                    var employees = employeeResponse.Result.Where(a => a.Organigram.CompanyDepartamentId == companyDeparmentId && (a.EndDate==null || a.EndDate >= DateTime.Now));
+                    var organigrams = organigramResponse.Result.Where(a => a.CompanyDepartamentId == companyDeparmentId);
                     var list = new List<OrganigramDto>(); //helper to search better
                     // add the company
                     var company = new OrganigramDto
@@ -404,13 +404,27 @@ namespace HRMS.Web.Controllers
 
 
                     // add the dep ceo-site ceo
+                 
+                    
+                    var siteCeo = new OrganigramDto() { Children = new List<OrganigramDto>() };
+                    companyCeo.Children.Add(siteCeo);
 
                     var siteCeoData = items.FirstOrDefault(a => a.IsCeo);
+                    if (siteCeoData is null)
+                    {
+                        siteCeo.Id = Guid.Empty;
+                        siteCeo.Name = companySiteResponse.Result.Departament.Name+ " ceo";
+                        siteCeo.Title = companySiteResponse.Result.Departament.Name + " ceo";
 
-                    var SiteCeo = new OrganigramDto() { Id = siteCeoData.Id, Name = siteCeoData.Name, Title = siteCeoData.Title, Children = new List<OrganigramDto>() };
 
-                    companyCeo.Children.Add(SiteCeo);
-
+                    }
+                    else
+                    {
+                        siteCeo.Id = siteCeoData.Id;
+                        siteCeo.Name = siteCeoData.Name;
+                        siteCeo.Title = siteCeoData.Title;
+                        
+                    }
 
                     //add the children TDDDD
                     var retryList = new List<OrganigramDto>();
