@@ -21,8 +21,7 @@ namespace HRMS.Web.Controllers
             this.companyService = companyService;
             this.companyDepartmentService = companySiteService;
         }
-
-
+        #region reference
         [HttpGet]
         public async Task<IActionResult> GetCountries(string search, int page)
         {
@@ -42,6 +41,7 @@ namespace HRMS.Web.Controllers
 
             return Json(result);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetRegions(string search, int page, int? countryId)
         {
@@ -119,6 +119,7 @@ namespace HRMS.Web.Controllers
 
             return Json(result);
         }
+
         [HttpGet]
         public IActionResult GetDays(string search, int page, int year, int month)
         {
@@ -138,6 +139,7 @@ namespace HRMS.Web.Controllers
             result.Items = list;
             return Json(result);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetContacts(string search, int page)
         {
@@ -176,8 +178,6 @@ namespace HRMS.Web.Controllers
             return Json(result);
         }
 
-
-
         [HttpGet]
         public async Task<IActionResult> GetOrganigrams(string search, int page, Guid? companySiteId)
         {
@@ -196,6 +196,17 @@ namespace HRMS.Web.Controllers
 
             return Json(result);
         }
+        #endregion
+
+
+
+
+
+
+
+
+
+
 
         [HttpGet]
         public async Task<IActionResult> GetCompanyOrganigrams(Guid companyId)
@@ -334,7 +345,7 @@ namespace HRMS.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCompanySiteOrganigrams(Guid companySiteId)
+        public async Task<IActionResult> GetCompanyDepartmentOrganigrams(Guid companySiteId)
         {
             var result = new CompanyOrganigramJsonModel();
 
@@ -460,6 +471,7 @@ namespace HRMS.Web.Controllers
             return Json(result);
         }
 
+        #region Helpers
         private SelectDataDTO Parse(CompanyDepartament a)
         {
             return new SelectDataDTO
@@ -521,5 +533,7 @@ namespace HRMS.Web.Controllers
                 Text = a.Name
             };
         }
+        #endregion
+
     }
 }

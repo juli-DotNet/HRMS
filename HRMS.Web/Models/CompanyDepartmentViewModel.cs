@@ -2,7 +2,7 @@
 
 namespace HRMS.Web.Models
 {
-    public class CompanySiteViewModel
+    public class CompanyDepartmentViewModel
     {
         public Guid Id { get; set; }
         public Guid CompanyId { get; set; }

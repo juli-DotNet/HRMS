@@ -9,12 +9,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HRMS.Web.Controllers
 {
-    public class CompanySiteController : Controller
+    public class CompanyDepartmentController : Controller
     {
         private readonly ICompanyDepartamentService companyDepartamentService;
         private readonly ICompanyService companyService;
 
-        public CompanySiteController(ICompanyDepartamentService companyDepartamentService,ICompanyService companyService)
+        public CompanyDepartmentController(ICompanyDepartamentService companyDepartamentService,ICompanyService companyService)
         {
             this.companyDepartamentService = companyDepartamentService;
             this.companyService = companyService;
@@ -27,7 +27,7 @@ namespace HRMS.Web.Controllers
             if (!result.IsSuccessful)
             {
                 ModelState.AddModelError("", result.Message);
-                return View(new List<CompanySiteViewModel>());
+                return View(new List<CompanyDepartmentViewModel>());
             }
             var list = result.Result.Select(a => Parse(a));
             return View(list);
@@ -41,7 +41,7 @@ namespace HRMS.Web.Controllers
             if (!response.IsSuccessful)
             {
                 ModelState.AddModelError("", response.Message);
-                return View(new CompanySiteViewModel());
+                return View(new CompanyDepartmentViewModel());
             }
             ViewBag.companyId = response.Result.CompanyId;
             return View(Parse(response.Result));
@@ -121,9 +121,9 @@ namespace HRMS.Web.Controllers
         //        Id = a.Id
         //    };
         //}
-        private CompanySiteViewModel Parse(CompanyDepartament a)
+        private CompanyDepartmentViewModel Parse(CompanyDepartament a)
         {
-            return new CompanySiteViewModel
+            return new CompanyDepartmentViewModel
             {
                 Company = a.Company.Name,
                 Id = a.Id,
