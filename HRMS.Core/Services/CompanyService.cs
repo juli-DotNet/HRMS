@@ -28,10 +28,10 @@ namespace HRMS.Core.Services
             return result;
 
         }
-        async Task<bool> DoesCompanyNiptExistAsync(string name, Guid? id)
+        async Task<bool> DoesCompanyNiptExistAsync(string nipt, Guid? id)
         {
-            var result = id.HasValue ? await work.Company.AnyAsync(a => a.NIPT.ToLower() == name.ToLower() && a.IsValid && a.Id != id)
-                : await work.Company.AnyAsync(a => a.NIPT.ToLower() == name.ToLower() && a.IsValid);
+            var result = id.HasValue ? await work.Company.AnyAsync(a => a.NIPT.ToLower() == nipt.ToLower() && a.IsValid && a.Id != id)
+                : await work.Company.AnyAsync(a => a.NIPT.ToLower() == nipt.ToLower() && a.IsValid);
             return result;
         }
 
@@ -42,11 +42,15 @@ namespace HRMS.Core.Services
             {
                 throw new HRMSException("Please enter correct address(City,Region,Country)");
             }
-            if (checkId && !(await DoesCompanyExistAsync(model.Name, model.Id)) && !(await DoesCompanyNiptExistAsync(model.NIPT, model.Id)))
+
+
+            if (checkId && 
+                (await DoesCompanyExistAsync(model.Name, model.Id) || await DoesCompanyNiptExistAsync(model.NIPT, model.Id))
+                )
             {
                 throw new HRMSException("Company (Name or nipt) already exists");
             }
-            else if (!checkId && !(await DoesCompanyExistAsync(model.Name, null)) && !(await DoesCompanyNiptExistAsync(model.NIPT, null)))
+            else if (!checkId && (await DoesCompanyExistAsync(model.Name, null) || await DoesCompanyNiptExistAsync(model.NIPT, null)))
             {
                 throw new HRMSException("Company (Name or nipt) already exists");
             }
@@ -65,8 +69,7 @@ namespace HRMS.Core.Services
                 CompanyDepartamentId = null,
                 IsCeo = true,
                 Name = model.Name + " Ceo",
-                IsValid = true,
-                Company = model
+                IsValid = true
             });
         }
         public async Task<Response> CreateAsync(Company model)
@@ -119,7 +122,7 @@ namespace HRMS.Core.Services
             var result = new Response { IsSuccessful = true };
             try
             {
-                await IsModelValid(model);
+                await IsModelValid(model,true);
                 var currentEntity = await work.Company.GetByIdAsync(model.Id);
                 if (currentEntity == null)
                 {
@@ -150,7 +153,7 @@ namespace HRMS.Core.Services
             var result = new Response<IEnumerable<Company>> { IsSuccessful = true };
             try
             {
-                result.Result = (await work.Company.GetAllAsync()).Where(a => a.IsValid);
+                result.Result = await work.Company.WhereAsync(a => a.IsValid, a => a.Address, a => a.Address.City, a => a.Address.Region, a => a.Address.Country);
 
             }
             catch (Exception ex)
@@ -166,7 +169,7 @@ namespace HRMS.Core.Services
             var result = new Response<Company> { IsSuccessful = true };
             try
             {
-                result.Result = await work.Company.GetByIdAsync(id);
+                result.Result = await work.Company.FirstOrDefault(a=>a.Id== id ,a => a.Address, a => a.Address.City, a => a.Address.Region, a => a.Address.Country);
 
             }
             catch (Exception ex)

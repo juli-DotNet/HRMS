@@ -113,7 +113,17 @@ namespace HRMS.Web.Controllers
                 Name = model.Name,
                 Id = model.Id,
                 NIPT = model.NIPT,
-                Description = model.Description
+                Description = model.Description,
+                AddressId = model.AddressId,
+                Address = new Address
+                {
+                    Id = model.AddressId,
+                    CityId = model.CityId,
+                    CountryId = model.CountryId,
+                    RegionId = model.RegionId,
+                    StreetName = model.StreetName,
+                    PostalCode = model.PostalCode
+                }
             };
         }
         private static CompanyViewModel Parse(Company model)
@@ -123,7 +133,16 @@ namespace HRMS.Web.Controllers
                 Name = model.Name,
                 Id = model.Id,
                 NIPT = model.NIPT,
-                Description = model.Description
+                Description = model.Description,
+                AddressId = model.AddressId, 
+                StreetName=model.Address.StreetName,
+                PostalCode=model.Address.PostalCode,
+                CountryId=model.Address.CountryId,
+                RegionId=model.Address.RegionId,
+                CityId = model.Address.CityId,
+                City = model.Address.City.Name,
+                Region=model.Address.Region.Name,
+                Country=model.Address.Country.Name
             };
         }
 

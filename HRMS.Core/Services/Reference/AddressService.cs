@@ -17,13 +17,13 @@ namespace HRMS.Core.Services
         }
         public async Task<Address> GetAddressAsync(Address address)
         {
-            var result = (await work.Address.WhereAsync(
+            var result = await work.Address.FirstOrDefault(
                         a =>
                             a.StreetName.ToLower() == address.StreetName.ToLower() &&
                             a.PostalCode.ToLower() == address.PostalCode.ToLower() &&
                             a.IsValid &&
                             a.CityId == address.CityId
-                            )).FirstOrDefault();
+                            );
             return result;
 
         }

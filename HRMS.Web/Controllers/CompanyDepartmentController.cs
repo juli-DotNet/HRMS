@@ -91,36 +91,6 @@ namespace HRMS.Web.Controllers
             return Json(result);
         }
       
-
-        //public async Task<ActionResult> LinkedSites(Guid id)
-        //{
-        //    var result = new LinkedSiteJsonModel();
-        //    var linkResult = await companyService.GetByIdAsync(id);
-
-        //    if (linkResult.IsSuccessful)
-        //    {
-        //        result.IsSuccessful = true;
-        //        result.Items = linkResult.Result.Select(a => Parse(a));
-        //    }
-        //    else
-        //    {
-        //        result.ErrorMessage = linkResult.Message;
-        //    }
-        //    return Json(result);
-        //}
-
-        //private DepartmentDto Parse(CompanyDepartament a)
-        //{
-        //    return new DepartmentDto
-        //    {
-        //        City = a.Site.Address.City.Name,
-        //        Region = a.Site.Address.Region.Name,
-        //        Country = a.Site.Address.Country.Name,
-        //        PostalCode = a.Site.Address.PostalCode,
-        //        Name = a.Name,
-        //        Id = a.Id
-        //    };
-        //}
         private CompanyDepartmentViewModel Parse(CompanyDepartament a)
         {
             return new CompanyDepartmentViewModel
