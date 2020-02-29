@@ -73,6 +73,8 @@ namespace HRMS.Web
             services.AddTransient<IEmployeeService, EmployeeService>();
             services.AddTransient<IOrganigramService, OrganigramService>();
             services.AddTransient<ICompanyDepartamentService, CompanyDepartmentService>();
+            services.AddTransient<IPayrollSeasonService, PayrollSeasonService>();
+            services.AddTransient<IPayrollSegmentService, PayrollSegmentService>();
            
         }
 

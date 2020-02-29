@@ -126,7 +126,7 @@ namespace HRMS.Core.Services
             {
                 if (regionId.HasValue && regionId.Value > 0)
                 {
-                    result.Result = await work.City.WhereAsync(a => a.IsValid && a.RegionId == regionId,a=>a.Country,a=>a.Region);
+                    result.Result = await work.City.WhereAsync(a => a.IsValid && a.RegionId == regionId, a => a.Country, a => a.Region);
                 }
                 else if (counryId.HasValue && counryId.Value > 0)
                 {
@@ -151,7 +151,7 @@ namespace HRMS.Core.Services
             var result = new Response<City> { IsSuccessful = true };
             try
             {
-                result.Result = await work.City.FirstOrDefault(a=>a.Id==id, a => a.Country, a => a.Region);
+                result.Result = await work.City.FirstOrDefault(a => a.Id == id, a => a.Country, a => a.Region);
             }
             catch (Exception ex)
             {
@@ -161,4 +161,5 @@ namespace HRMS.Core.Services
             return result;
         }
     }
+
 }
