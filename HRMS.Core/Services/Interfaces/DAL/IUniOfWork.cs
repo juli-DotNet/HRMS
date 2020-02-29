@@ -16,6 +16,10 @@ namespace HRMS.Core.Services.Interfaces
         IRepository<OrganigramEmployee> OrganigramEmployee { get; }
         IRepository<Region> Region { get;  }
         IRepository<Departament> Departament { get;  }
+        IRepository<CompanyPayroll> CompanyPayroll { get;  }
+        IRepository<EmployeeCompanyPayroll> EmployeeCompanyPayroll { get;  }
+        IRepository<PayrollSeason> PayrollSeason { get;  }
+        IRepository<PayrollSegment> PayrollSegment { get;  }
 
         Task SaveChangesAsync();
     }

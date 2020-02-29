@@ -32,6 +32,14 @@ namespace HRMS.Persistance
 
         public IRepository<Departament> Departament => new Repository<Departament>(_context);
 
+        public IRepository<CompanyPayroll> CompanyPayroll => new Repository<CompanyPayroll>(_context);
+
+        public IRepository<EmployeeCompanyPayroll> EmployeeCompanyPayroll => new Repository<EmployeeCompanyPayroll>(_context);
+
+        public IRepository<PayrollSeason> PayrollSeason => new Repository<PayrollSeason>(_context);
+
+        public IRepository<PayrollSegment> PayrollSegment => new Repository<PayrollSegment>(_context);
+
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();

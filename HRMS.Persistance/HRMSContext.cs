@@ -27,6 +27,10 @@ namespace HRMS.Persistance
         public DbSet<OrganigramEmployee> OrganigramEmployee { get; set; }
         public DbSet<Region> Region { get; set; }
         public DbSet<Departament> Departament { get; set; }
+        public DbSet<PayrollSegment> PayrollSegment { get; set; }
+        public DbSet<PayrollSeason> PayrollSeason { get; set; }
+        public DbSet<CompanyPayroll> CompanyPayroll { get; set; }
+        public DbSet<EmployeeCompanyPayroll> EmployeeCompanyPayroll { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
