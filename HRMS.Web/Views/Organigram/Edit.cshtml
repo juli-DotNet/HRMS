@@ -33,14 +33,14 @@
                 <span asp-validation-for="RespondsTo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CompanySite" class="control-label"></label>
-                <select asp-for="CompanySiteId" class="form-control">
-                    @if (Model.CompanySiteId != Guid.Empty)
+                <label asp-for="CompanyDepartment" class="control-label"></label>
+                <select asp-for="CompanyDepartmentId" class="form-control">
+                    @if (Model.CompanyDepartmentId != Guid.Empty)
                     {
-                        <option value="@Model.CompanySiteId">@Model.CompanySite</option>
+                        <option value="@Model.CompanyDepartmentId">@Model.CompanyDepartment</option>
                     }
                 </select>
-                <span asp-validation-for="CompanySiteId" class="text-danger"></span>
+                <span asp-validation-for="CompanyDepartmentId" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -206,7 +206,7 @@
                         var query = {
                             search: params.term,
                             page: params.page || 1,
-                            companySiteId: $("#CompanySiteId").val()
+                            companySiteId: "@ViewBag.companyId"
                         }
                         return query;
                     },
@@ -223,12 +223,12 @@
             $('#CompanySiteId').select2({
                 placeholder: 'Select an option',
                 ajax: {
-                    url: '@Url.Action("GetCompanySites", "Json")',
+                    url: '@Url.Action("GetCompanyDepartments", "Json")',
                     data: function (params) {
                         var query = {
                             search: params.term,
                             page: params.page || 1,
-                            companyId: ""//$("#CompanySiteId").val()
+                            companyId:"@ViewBag.companyId"
                         }
                         return query;
                     },

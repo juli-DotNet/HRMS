@@ -28,7 +28,7 @@
                     @Html.DisplayNameFor(model => model.RespondsTo)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.CompanySite)
+                    @Html.DisplayNameFor(model => model.CompanyDepartment)
                 </th>
                 <th class="no-sort">Actions</th>
             </tr>
@@ -47,7 +47,7 @@
                     @Html.DisplayFor(modelItem => item.RespondsTo)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CompanySite)
+                    @Html.DisplayFor(modelItem => item.CompanyDepartment)
                 </td>
                 <td class="actions">
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info ">Details </a>
