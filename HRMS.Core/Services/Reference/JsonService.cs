@@ -257,5 +257,25 @@ namespace HRMS.Core.Services
             }
             return result;
         }
+
+        public async Task<Response<IEnumerable<PayrollSeason>>> GetPayrollSeasonsAsync(string search)
+        {
+            var result = new Response<IEnumerable<PayrollSeason>> { IsSuccessful = true };
+            try
+            {
+                if (string.IsNullOrEmpty(search))
+                {
+                    search = "";
+                }
+                result.Result = await work.PayrollSeason.WhereAsync(a => a.IsValid && a.Name.ToLower().Contains(search.ToLower()));
+
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.IsSuccessful = false;
+            }
+            return result;
+        }
     }
 }

@@ -103,6 +103,28 @@ namespace HRMS.Web.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetPayrollSeasons(string search, int page)
+        {
+
+            var serviceResponse = await service.GetPayrollSeasonsAsync(search);
+
+            var result = new JsonGenericModel();
+            if (serviceResponse.IsSuccessful)
+            {
+                result.IsSuccessful = true;
+                result.Items = serviceResponse.Result.Select(a => Parse(a));
+            }
+            else
+            {
+                result.ErrorMessage = serviceResponse.Message;
+            }
+
+            return Json(result);
+        }
+
+       
+
+        [HttpGet]
         public IActionResult GetYears(string search, int page)
         {
             var last5Years = from n in Enumerable.Range(0, 80)
@@ -545,6 +567,15 @@ namespace HRMS.Web.Controllers
             {
                 Id = a.Id.ToString(),
                 Text = a.Name
+            };
+        }
+
+        private SelectDataDTO Parse(PayrollSeason source)
+        {
+            return new SelectDataDTO
+            {
+                Id = source.Id.ToString(),
+                Text = source.Name
             };
         }
         #endregion
