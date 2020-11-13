@@ -14,12 +14,15 @@ namespace HRMS.Web.Controllers
         private readonly IJsonService service;
         private readonly ICompanyService companyService;
         private readonly ICompanyDepartamentService companyDepartmentService;
+        private readonly IPayrollSegmentService payrollSegmentService;
 
-        public JsonController(IJsonService service, ICompanyService companyService, ICompanyDepartamentService companySiteService)
+        public JsonController(IJsonService service, 
+            ICompanyService companyService, ICompanyDepartamentService companySiteService,IPayrollSegmentService payrollSegmentService)
         {
             this.service = service;
             this.companyService = companyService;
             this.companyDepartmentService = companySiteService;
+            this.payrollSegmentService = payrollSegmentService;
         }
         #region reference
         [HttpGet]
@@ -107,6 +110,25 @@ namespace HRMS.Web.Controllers
         {
 
             var serviceResponse = await service.GetPayrollSeasonsAsync(search);
+
+            var result = new JsonGenericModel();
+            if (serviceResponse.IsSuccessful)
+            {
+                result.IsSuccessful = true;
+                result.Items = serviceResponse.Result.Select(a => Parse(a));
+            }
+            else
+            {
+                result.ErrorMessage = serviceResponse.Message;
+            }
+
+            return Json(result);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetPayrollSegments(int seasonId,string search, int page)
+        {
+
+            var serviceResponse = await payrollSegmentService.GetAllAsync(seasonId);
 
             var result = new JsonGenericModel();
             if (serviceResponse.IsSuccessful)
@@ -219,15 +241,6 @@ namespace HRMS.Web.Controllers
             return Json(result);
         }
         #endregion
-
-
-
-
-
-
-
-
-
 
 
         [HttpGet]
@@ -506,7 +519,8 @@ namespace HRMS.Web.Controllers
 
             return Json(result);
         }
-
+        
+        
         #region Helpers
         private SelectDataDTO Parse(CompanyDepartament a)
         {
@@ -571,6 +585,14 @@ namespace HRMS.Web.Controllers
         }
 
         private SelectDataDTO Parse(PayrollSeason source)
+        {
+            return new SelectDataDTO
+            {
+                Id = source.Id.ToString(),
+                Text = source.Name
+            };
+        }
+        private SelectDataDTO Parse(PayrollSegment source)
         {
             return new SelectDataDTO
             {

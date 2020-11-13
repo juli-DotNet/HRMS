@@ -1,50 +1,62 @@
-﻿@model IEnumerable<HRMS.Web.Models.CompanyViewModel>
+﻿@model IEnumerable<HRMS.Web.Models.CompanyPayrollViewModel>
 
 @{
-    ViewData["Title"] = "Compnay";
+    ViewData["Title"] = "Employee Payment Managements";
 }
-
 
 <div class="row">
     <div class="col-md-12">
-        <h2 class="d-inline">Companies</h2>
-        <a asp-action="Create" class="btn btn-success float-right">Create New</a>
+        <h2 class="d-inline">Employee Payment Managements</h2>
+        <a asp-action="Create" asp-route-id="@ViewBag.CompanyId" class="btn btn-success float-right">Create New</a>
     </div>
     <hr />
 </div>
 <hr />
-<div class="list-header"></div>
+<div class="list-header">
+</div>
 <main>
     <table class="table display">
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    @Html.DisplayNameFor(model => model.CompanyName)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.NIPT)
+                    @Html.DisplayNameFor(model => model.Segment)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Description)
+                    @Html.DisplayNameFor(model => model.Season)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsPayed)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotalAmount)
                 </th>
                 <th class="no-sort">Actions</th>
             </tr>
         </thead>
         <tbody>
+           
             @foreach (var item in Model)
             {
                 <tr role="row" class="rowlink">
                     <td>
-                        @Html.DisplayFor(modelItem => item.Name)
+                        @Html.DisplayFor(modelItem => item.CompanyName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.NIPT)
+                        @Html.DisplayFor(modelItem => item.Segment)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Description)
+                        @Html.DisplayFor(modelItem => item.Season)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsPayed)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalAmount)
                     </td>
                     <td class="actions">
-                        <a asp-action="Index" asp-controller="EmployeePayments" asp-route-id="@item.Id" class="btn btn-info ">Payrolls </a>
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info ">Details </a>
 
                         <a asp-action="Edit" asp-route-id="@item.Id" class=" btn btn-primary">Edit </a>
@@ -88,8 +100,8 @@
 
             $('#confirm-delete').on('show.bs.modal', function (e) {
                 $(".modal-body").empty().html(" Are you sure you want to delete this item ?");
-                var url = $(e.relatedTarget).attr('href');
-                $(this).find('.btn-ok').attr('href', url);
+               var url= $(e.relatedTarget).attr('href');
+                $(this).find('.btn-ok').attr('href',url);
             });
 
             $(".btn-ok").on("click", function (event) {

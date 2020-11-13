@@ -75,6 +75,7 @@ namespace HRMS.Web
             services.AddTransient<ICompanyDepartamentService, CompanyDepartmentService>();
             services.AddTransient<IPayrollSeasonService, PayrollSeasonService>();
             services.AddTransient<IPayrollSegmentService, PayrollSegmentService>();
+            services.AddTransient<IPayrollService, PayrollService>();
            
         }
 

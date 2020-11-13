@@ -3,7 +3,6 @@ using HRMS.Core.Model;
 using HRMS.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HRMS.Core.Services
@@ -44,7 +43,7 @@ namespace HRMS.Core.Services
             }
 
 
-            if (checkId && 
+            if (checkId &&
                 (await DoesCompanyExistAsync(model.Name, model.Id) || await DoesCompanyNiptExistAsync(model.NIPT, model.Id))
                 )
             {
@@ -122,7 +121,7 @@ namespace HRMS.Core.Services
             var result = new Response { IsSuccessful = true };
             try
             {
-                await IsModelValid(model,true);
+                await IsModelValid(model, true);
                 var currentEntity = await work.Company.GetByIdAsync(model.Id);
                 if (currentEntity == null)
                 {
@@ -169,7 +168,7 @@ namespace HRMS.Core.Services
             var result = new Response<Company> { IsSuccessful = true };
             try
             {
-                result.Result = await work.Company.FirstOrDefault(a=>a.Id== id ,a => a.Address, a => a.Address.City, a => a.Address.Region, a => a.Address.Country);
+                result.Result = await work.Company.FirstOrDefault(a => a.Id == id, a => a.Address, a => a.Address.City, a => a.Address.Region, a => a.Address.Country);
 
             }
             catch (Exception ex)
@@ -180,6 +179,6 @@ namespace HRMS.Core.Services
             return result;
         }
 
-       
+
     }
 }
