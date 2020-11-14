@@ -45,7 +45,7 @@
                 <span asp-validation-for="IsPayed" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Pay" class="btn btn-success" />
+                <input type="submit" value="Save" class="btn btn-success" />
             </div>
         </form>
     </div>
@@ -74,7 +74,6 @@
                         Neto
                     </th>
 
-
                     <th class="no-sort"></th>
                 </tr>
             <tbody></tbody>
@@ -85,6 +84,8 @@
 @section Scripts{
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script>
         $(function () {
             var table = $(".table").DataTable({
@@ -93,12 +94,12 @@
                     dataSrc: 'items'
                 },
                 "columns": [
-                    { "data": "Position" },
-                    { "data": "Employee" },
-                    { "data": "StartDate" },
-                    { "data": "EndDate" },
-                    { "data": "Amount" },
-                    { "data": "Neto" },
+                    { "data": "position" },
+                    { "data": "employee" },
+                    { "data": "startDate" },
+                    { "data": "endDate" },
+                    { "data": "amount" },
+                    { "data": "neto" }
                 ]
 
                 , "columnDefs": [

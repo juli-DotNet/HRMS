@@ -125,11 +125,17 @@ namespace HRMS.Web.Controllers
         }
         public async Task<IActionResult> GetPayrollEmployees(Guid id)
         {
+            var toSendModel = new CompanyPayrollEmployeesJsonModel() { IsSuccessful = true };
             var result = await service.GetPayrollEmployees(id);
 
             if (result.IsSuccessful)
-                return Json(result.Result.Select(Parse));
-            return Json("Error happened");
+                toSendModel.Items = result.Result.Select(Parse);
+            else
+            {
+                toSendModel.IsSuccessful = false;
+                toSendModel.ErrorMessage = result.Message;
+            }
+            return Json(toSendModel);
         }
         private static PayrollEmployeetDto Parse(EmployeeCompanyPayroll model)
         {

@@ -89,8 +89,9 @@ namespace HRMS.Core.Services
                     {
                         await work.EmployeeCompanyPayroll.InsertAsync(new EmployeeCompanyPayroll
                         {
+                            Id=Guid.NewGuid(),
                             CompanyPayrollId = companyPayroll.Id,
-                            EmployeeId = employee.Id,
+                            EmployeeId = employee.EmployeeId,
                             IsValid = true,
                             NetoAmount = employee.NetAmountInMonth,
                             BrutoAmount = employee.BrutoAmountInMonth,
@@ -108,8 +109,9 @@ namespace HRMS.Core.Services
 
                         await work.EmployeeCompanyPayroll.InsertAsync(new EmployeeCompanyPayroll
                         {
+                            Id=Guid.NewGuid(),
                             CompanyPayrollId = companyPayroll.Id,
-                            EmployeeId = employee.Id,
+                            EmployeeId = employee.EmployeeId,
                             IsValid = true,
                             NetoAmount = employee.NetAmountInMonth * tmp,
                             BrutoAmount = employee.BrutoAmountInMonth * tmp,
@@ -200,7 +202,6 @@ namespace HRMS.Core.Services
                 {
                     throw new HRMSException("Entity couldnt be found");
                 }
-                currentEntity.IsValid = false;
                 currentEntity.IsPayed = isPayed;
                 await work.SaveChangesAsync();
             }

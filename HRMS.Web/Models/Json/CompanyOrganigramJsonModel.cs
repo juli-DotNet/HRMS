@@ -6,4 +6,8 @@ namespace HRMS.Web.Models
     {
         public IEnumerable<OrganigramDto> Items { get; set; }
     }
+    public class CompanyPayrollEmployeesJsonModel : GenericViewModel
+    {
+        public IEnumerable<PayrollEmployeetDto> Items { get; set; }
+    }
 }
