@@ -67,6 +67,15 @@ namespace HRMS.Web
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IRegionService, RegionService>();
             services.AddScoped<ICityService, CityService>();
+            services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IDepartamentService, DepartmentService>();
+            services.AddTransient<IAddressService, AddressService>();
+            services.AddTransient<IEmployeeService, EmployeeService>();
+            services.AddTransient<IOrganigramService, OrganigramService>();
+            services.AddTransient<ICompanyDepartamentService, CompanyDepartmentService>();
+            services.AddTransient<IPayrollSeasonService, PayrollSeasonService>();
+            services.AddTransient<IPayrollSegmentService, PayrollSegmentService>();
+            services.AddTransient<IPayrollService, PayrollService>();
            
         }
 

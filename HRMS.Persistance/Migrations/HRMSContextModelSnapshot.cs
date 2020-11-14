@@ -26,9 +26,7 @@ namespace HRMS.Persistance.Migrations
 
                     b.Property<int>("CityId");
 
-                    b.Property<int?>("CountryId");
-
-                    b.Property<int>("CountyId");
+                    b.Property<int>("CountryId");
 
                     b.Property<Guid?>("CreatedBy");
 
@@ -93,6 +91,8 @@ namespace HRMS.Persistance.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<Guid>("AddressId");
+
                     b.Property<Guid?>("CreatedBy");
 
                     b.Property<DateTime>("CreatedOn");
@@ -111,15 +111,81 @@ namespace HRMS.Persistance.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AddressId");
+
                     b.ToTable("Company");
                 });
 
-            modelBuilder.Entity("HRMS.Core.Model.CompanySite", b =>
+            modelBuilder.Entity("HRMS.Core.Model.CompanyDepartament", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<Guid>("CompanyId");
+
+                    b.Property<Guid?>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<Guid>("DepartamentId");
+
+                    b.Property<bool>("IsValid");
+
+                    b.Property<Guid?>("ModifiedBy");
+
+                    b.Property<DateTime>("ModifiedOn");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("DepartamentId");
+
+                    b.ToTable("CompanyDepartament");
+                });
+
+            modelBuilder.Entity("HRMS.Core.Model.CompanyPayroll", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("CompanyId");
+
+                    b.Property<Guid?>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<bool>("IsPayed");
+
+                    b.Property<bool>("IsValid");
+
+                    b.Property<Guid?>("ModifiedBy");
+
+                    b.Property<DateTime>("ModifiedOn");
+
+                    b.Property<int>("PayrollSegmentId");
+
+                    b.Property<decimal>("TotalAmounBruto");
+
+                    b.Property<decimal>("TotalAmounNeto");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("PayrollSegmentId");
+
+                    b.ToTable("CompanyPayroll");
+                });
+
+            modelBuilder.Entity("HRMS.Core.Model.Country", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code")
+                        .IsRequired();
 
                     b.Property<Guid?>("CreatedBy");
 
@@ -131,24 +197,18 @@ namespace HRMS.Persistance.Migrations
 
                     b.Property<DateTime>("ModifiedOn");
 
-                    b.Property<Guid>("SiteId");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("SiteId");
-
-                    b.ToTable("CompanySite");
+                    b.ToTable("Country");
                 });
 
-            modelBuilder.Entity("HRMS.Core.Model.Country", b =>
+            modelBuilder.Entity("HRMS.Core.Model.Departament", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Code");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<Guid?>("CreatedBy");
 
@@ -164,7 +224,7 @@ namespace HRMS.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Country");
+                    b.ToTable("Departament");
                 });
 
             modelBuilder.Entity("HRMS.Core.Model.Employee", b =>
@@ -174,9 +234,9 @@ namespace HRMS.Persistance.Migrations
 
                     b.Property<Guid>("AddressId");
 
-                    b.Property<DateTime>("BithDate");
+                    b.Property<DateTime>("BirthDate");
 
-                    b.Property<Guid>("ContactId");
+                    b.Property<Guid?>("ContactId");
 
                     b.Property<Guid?>("CreatedBy");
 
@@ -207,10 +267,50 @@ namespace HRMS.Persistance.Migrations
                     b.ToTable("Employee");
                 });
 
+            modelBuilder.Entity("HRMS.Core.Model.EmployeeCompanyPayroll", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<decimal>("BrutoAmount");
+
+                    b.Property<Guid>("CompanyPayrollId");
+
+                    b.Property<Guid?>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<Guid>("EmployeeId");
+
+                    b.Property<bool>("IsValid");
+
+                    b.Property<Guid?>("ModifiedBy");
+
+                    b.Property<DateTime>("ModifiedOn");
+
+                    b.Property<decimal>("NetoAmount");
+
+                    b.Property<Guid>("OrganigramEmployeeId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyPayrollId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("OrganigramEmployeeId");
+
+                    b.ToTable("EmployeeCompanyPayroll");
+                });
+
             modelBuilder.Entity("HRMS.Core.Model.Organigram", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<Guid?>("CompanyDepartamentId");
+
+                    b.Property<Guid>("CompanyId");
 
                     b.Property<Guid?>("CreatedBy");
 
@@ -229,6 +329,10 @@ namespace HRMS.Persistance.Migrations
                     b.Property<Guid?>("RespondsToId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CompanyDepartamentId");
+
+                    b.HasIndex("CompanyId");
 
                     b.HasIndex("RespondsToId");
 
@@ -271,6 +375,60 @@ namespace HRMS.Persistance.Migrations
                     b.ToTable("OrganigramEmployee");
                 });
 
+            modelBuilder.Entity("HRMS.Core.Model.PayrollSeason", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<Guid?>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<bool>("IsValid");
+
+                    b.Property<Guid?>("ModifiedBy");
+
+                    b.Property<DateTime>("ModifiedOn");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("year");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PayrollSeason");
+                });
+
+            modelBuilder.Entity("HRMS.Core.Model.PayrollSegment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<Guid?>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<bool>("IsValid");
+
+                    b.Property<Guid?>("ModifiedBy");
+
+                    b.Property<DateTime>("ModifiedOn");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("Nr");
+
+                    b.Property<int>("PayrollSeasonId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PayrollSeasonId");
+
+                    b.ToTable("PayrollSegment");
+                });
+
             modelBuilder.Entity("HRMS.Core.Model.Region", b =>
                 {
                     b.Property<int>("Id")
@@ -296,32 +454,6 @@ namespace HRMS.Persistance.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("Region");
-                });
-
-            modelBuilder.Entity("HRMS.Core.Model.Site", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<Guid>("AddressId");
-
-                    b.Property<Guid?>("CreatedBy");
-
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<bool>("IsValid");
-
-                    b.Property<Guid?>("ModifiedBy");
-
-                    b.Property<DateTime>("ModifiedOn");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressId");
-
-                    b.ToTable("Site");
                 });
 
             modelBuilder.Entity("HRMS.Core.Model.Address", b =>
@@ -355,16 +487,37 @@ namespace HRMS.Persistance.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("HRMS.Core.Model.CompanySite", b =>
+            modelBuilder.Entity("HRMS.Core.Model.Company", b =>
+                {
+                    b.HasOne("HRMS.Core.Model.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("HRMS.Core.Model.CompanyDepartament", b =>
                 {
                     b.HasOne("HRMS.Core.Model.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("HRMS.Core.Model.Site", "Site")
+                    b.HasOne("HRMS.Core.Model.Departament", "Departament")
                         .WithMany()
-                        .HasForeignKey("SiteId")
+                        .HasForeignKey("DepartamentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("HRMS.Core.Model.CompanyPayroll", b =>
+                {
+                    b.HasOne("HRMS.Core.Model.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("HRMS.Core.Model.PayrollSegment", "PayrollSegment")
+                        .WithMany()
+                        .HasForeignKey("PayrollSegmentId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -381,8 +534,36 @@ namespace HRMS.Persistance.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("HRMS.Core.Model.EmployeeCompanyPayroll", b =>
+                {
+                    b.HasOne("HRMS.Core.Model.CompanyPayroll", "CompanyPayroll")
+                        .WithMany()
+                        .HasForeignKey("CompanyPayrollId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("HRMS.Core.Model.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("HRMS.Core.Model.OrganigramEmployee", "OrganigramEmployee")
+                        .WithMany()
+                        .HasForeignKey("OrganigramEmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("HRMS.Core.Model.Organigram", b =>
                 {
+                    b.HasOne("HRMS.Core.Model.CompanyDepartament", "CompanyDepartament")
+                        .WithMany()
+                        .HasForeignKey("CompanyDepartamentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("HRMS.Core.Model.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("HRMS.Core.Model.Organigram", "RespondsTo")
                         .WithMany()
                         .HasForeignKey("RespondsToId")
@@ -402,19 +583,19 @@ namespace HRMS.Persistance.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("HRMS.Core.Model.PayrollSegment", b =>
+                {
+                    b.HasOne("HRMS.Core.Model.PayrollSeason", "PayrollSeason")
+                        .WithMany()
+                        .HasForeignKey("PayrollSeasonId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("HRMS.Core.Model.Region", b =>
                 {
                     b.HasOne("HRMS.Core.Model.Country", "Country")
                         .WithMany()
                         .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("HRMS.Core.Model.Site", b =>
-                {
-                    b.HasOne("HRMS.Core.Model.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618

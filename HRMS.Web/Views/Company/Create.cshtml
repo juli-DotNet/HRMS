@@ -1,0 +1,164 @@
+﻿@model HRMS.Web.Models.CompanyViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<partial name="_header" />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <input asp-for="Id" hidden />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NIPT" class="control-label"></label>
+                <input asp-for="NIPT" class="form-control" />
+                <span asp-validation-for="NIPT" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StreetName" class="control-label"></label>
+                <input asp-for="StreetName" class="form-control" />
+                <span asp-validation-for="StreetName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PostalCode" class="control-label"></label>
+                <input asp-for="PostalCode" class="form-control" />
+                <span asp-validation-for="PostalCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Country" class="control-label"></label>
+                <select asp-for="CountryId" class="form-control">
+                    @if (Model.CountryId > 0)
+                    {
+
+                        <option selected value="@Model.CountryId">@Model.Country</option>
+                    }
+                </select>
+                <span asp-validation-for="CountryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Region" class="control-label"></label>
+                <select asp-for="RegionId" class="form-control">
+                    @if (Model.RegionId > 0)
+                    {
+
+                        <option selected value="@Model.RegionId">@Model.Region</option>
+                    }
+                </select>
+                <span asp-validation-for="RegionId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <select asp-for="CityId" class="form-control selectRegionsAdd">
+                    @if (Model.CityId > 0)
+                    {
+                        <option selected value="@Model.CityId">@Model.City</option>
+                    }
+                </select>
+                <span asp-validation-for="CityId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <script>
+            $(function () {
+
+
+
+
+                 $('#CountryId').select2({
+                     placeholder: 'Select an option',
+                    ajax: {
+                        url: '@Url.Action("GetCountries", "Json")',
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                page: params.page || 1
+                            }
+                            return query;
+                        },
+                        processResults: function (data) {
+                            return {
+                                results: data.items
+                            };
+                        }
+                    }
+               }).on('change', function () {
+                   PrepareRegion("");
+               });
+
+                function PrepareRegion(value) {
+
+                    $('#RegionId').val(value).select2({
+                            placeholder: 'Select an option',
+                            ajax: {
+                                    url: '@Url.Action("GetRegions", "Json")',
+                                    data: function (params) {
+                                        var query = {
+                                            search: params.term,
+                                            page: params.page || 1,
+                                            countryId: $("#CountryId").val()
+                                        }
+                                        return query;
+                                    },
+                                    processResults: function (data) {
+                                        return {
+                                            results: data.items
+                                        };
+                                    }
+                            }
+                     }).on("change", function () {
+                         PrepareCity("");
+                     });
+
+                }
+
+
+
+                function PrepareCity(value) {
+                    $('#CityId').val(value).select2({
+                        placeholder: 'Select an option',
+                        ajax: {
+                            url: '@Url.Action("GetCities", "Json")',
+                            data: function (params) {
+                                var query = {
+                                    search: params.term,
+                                    page: params.page || 1,
+                                    countryId: $("#CountryId").val(),
+                                    regionId: $("#RegionId").val()
+                                }
+                                return query;
+                            },
+                            processResults: function (data) {
+                                return {
+                                    results: data.items
+                                };
+                            }
+                        }
+                    });
+                }
+
+                PrepareRegion('@Model.RegionId');
+                PrepareCity('@Model.CityId');
+            });
+
+    </script>
+}

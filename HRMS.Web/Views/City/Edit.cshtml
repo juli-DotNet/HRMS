@@ -94,8 +94,7 @@
                     });
                 return false;
             });
-
-             $('.selectAdd').select2({
+            var country= $('#CountryId').select2({
                 placeholder: 'Select an option',
                 ajax: {
                     url: '@Url.Action("GetCountries", "Json")',
@@ -112,26 +111,37 @@
                         };
                     }
                 }
-            });
+           }).on('change', function () {
+               PrepareRegion();
+           });
 
-            $('.selectRegionAdd').select2({
-                placeholder: 'Select an option',
-                ajax: {
-                    url: '@Url.Action("GetRegions", "Json")',
-                    data: function (params) {
-                        var query = {
-                            search: params.term,
-                            page: params.page || 1
+            function PrepareRegion() {
+
+                $('#RegionId').val("").select2({
+                        placeholder: 'Select an option',
+                        ajax: {
+                                url: '@Url.Action("GetRegions", "Json")',
+                                data: function (params) {
+                                    var query = {
+                                        search: params.term,
+                                        page: params.page || 1,
+                                        countryId: $("#CountryId").val()
+                                    }
+                                    return query;
+                                },
+                                processResults: function (data) {
+                                    return {
+                                        results: data.items
+                                    };
+                                }
                         }
-                        return query;
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: data.items
-                        };
-                    }
-                }
-            });
+                 });
+
+            }
+            $('#RegionId').select2({ enable: false });
+
+
+
         });
 
     </script>

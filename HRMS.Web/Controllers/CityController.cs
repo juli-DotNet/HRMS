@@ -11,57 +11,25 @@ namespace HRMS.Web.Controllers
 {
     public class CityController : Controller
     {
-        private readonly IRegionService regionService;
-        private readonly ICountryService countryService;
+
         private readonly ICityService cityService;
 
-        public CityController(IRegionService regionService, ICountryService countryService, ICityService cityService)
+        public CityController( ICityService cityService)
         {
-            this.regionService = regionService;
-            this.countryService = countryService;
             this.cityService = cityService;
         }
         #region GET
         public async Task<IActionResult> Index()
         {
-            var result = await regionService.GetAllAsync(null);
-            if (!result.IsSuccessful)
-            {
-                ModelState.AddModelError("", result.Message);
-                return View(new List<CityViewModel>());
-            }
-
-            var countries = await countryService.GetAllAsync();
-            if (!countries.IsSuccessful)
-            {
-                ModelState.AddModelError("", countries.Message);
-                return View(new List<CityViewModel>());
-            }
+            
             var cities = await cityService.GetAllAsync(null, null);
             if (!cities.IsSuccessful)
             {
                 ModelState.AddModelError("", cities.Message);
                 return View(new List<CityViewModel>());
             }
-
-
-            var list =
-                (from region in result.Result
-                 join country in countries.Result on region.CountryId equals country.Id
-                 join city in cities.Result on region.Id equals city.RegionId
-                 select new CityViewModel
-                 {
-                     Id = city.Id,
-                     Name = city.Name,
-                     Country = country.Name,
-                     CountryId = region.CountryId,
-                     Region = region.Name,
-                     RegionId = region.Id
-                 });
-
+            var list = cities.Result.Select(a => Parse(a));
             return View(list);
-
-
         }
 
         public IActionResult Create()
@@ -78,15 +46,7 @@ namespace HRMS.Web.Controllers
                 ModelState.AddModelError("", response.Message);
                 return View(new CityViewModel());
             }
-            return View(new CityViewModel
-            {
-                Id = id,
-                Name = response.Result.Name,
-                CountryId = response.Result.CountryId,
-                Country = response.Result.Country.Name,
-                Region = response.Result.Region.Name,
-                RegionId = response.Result.RegionId
-            });
+            return View(Parse(response.Result));
         }
         public async Task<IActionResult> Edit(int id)
         {
@@ -98,16 +58,9 @@ namespace HRMS.Web.Controllers
                 return View(new CityViewModel());
             }
 
-            return View(new CityViewModel
-            {
-                Id = id,
-                Name = response.Result.Name,
-                CountryId = response.Result.CountryId,
-                Country = response.Result.Country.Name,
-                Region = response.Result.Region.Name,
-                RegionId = response.Result.RegionId
-            });
+            return View(Parse(response.Result));
         }
+
         public async Task<IActionResult> Delete(int id)
         {
 
@@ -126,14 +79,7 @@ namespace HRMS.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                var toCreateModel = new City
-                {
-                    Name = model.Name,
-                    CountryId = model.CountryId,
-                    RegionId = model.RegionId
-                };
-                var result = await cityService.CreateAsync(toCreateModel);
+                var result = await cityService.CreateAsync(Parse(model));
                 if (!result.IsSuccessful)
                 {
                     ModelState.AddModelError("", result.Message);
@@ -141,8 +87,6 @@ namespace HRMS.Web.Controllers
                 }
                 return RedirectToAction("Index");
             }
-
-
             return View(model);
         }
 
@@ -154,14 +98,7 @@ namespace HRMS.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var toUpdateModel = new City
-                {
-                    Name = model.Name,
-                    Id = model.Id,
-                    CountryId = model.CountryId,
-                    RegionId = model.RegionId
-                };
-                var result = await cityService.EditAsync(toUpdateModel);
+                var result = await cityService.EditAsync(Parse(model));
                 if (!result.IsSuccessful)
                 {
                     ModelState.AddModelError("", result.Message);
@@ -172,6 +109,28 @@ namespace HRMS.Web.Controllers
             }
             return View(model);
 
+        }
+        private static CityViewModel Parse(City response)
+        {
+            return new CityViewModel
+            {
+                Id = response.Id,
+                Name = response.Name,
+                CountryId = response.CountryId,
+                Country = response.Country.Name,
+                Region = response.Region.Name,
+                RegionId = response.RegionId
+            };
+        }
+        private static City Parse(CityViewModel model)
+        {
+            return new City
+            {
+                Name = model.Name,
+                Id = model.Id,
+                CountryId = model.CountryId,
+                RegionId = model.RegionId
+            };
         }
     }
 }

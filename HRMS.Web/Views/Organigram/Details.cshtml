@@ -1,0 +1,139 @@
+﻿@model HRMS.Web.Models.OrganigramViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<partial name="_header" />
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IsCeo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IsCeo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RespondsTo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RespondsTo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CompanyDepartment)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CompanyDepartment)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class=" btn btn-primary">Edit </a>
+</div>
+
+<div class="list-header"></div>
+<div class="row ">
+    <div class="col-md-11">
+        <h3 class="d-inline">Employement History </h3>
+    </div>
+    <div class="col-md-1">
+    </div>
+</div>
+<hr />
+<div class="list-header"></div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table display">
+            <thead>
+                <tr>
+                    <th>
+                        Employee
+                    </th>
+                    <th>
+                        Start Date
+                    </th>
+                    <th>
+                        End Date
+                    </th>
+                    <th>
+                        Net Amount
+                    </th>
+                    <th>
+                        Bruto Amount
+                    </th>
+                    <th class="no-sort">Actions</th>
+                </tr>
+            <tbody></tbody>
+        </table>
+    </div>
+
+
+</div>
+
+
+@section Scripts{
+    <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script>
+        $(function () {
+
+           
+
+              var table = $(".table").DataTable({
+                ajax: {
+                    url:"@Url.Action("EmployementHistory","Organigram",new { id=Model.Id})",
+                    dataSrc: 'items'
+                  },
+                "order": [[2, "asc"]],
+                "columns": [
+                    { "data": "name" },
+                    {
+                        "data": "startDate", "render": function (data, type, row) {
+                            if (type === "sort" || type === "type") {
+                                return data;
+                            }
+                            return moment(data).format("MMM-DD-YYYY");
+                        }
+                    },
+                    {
+                        "data": "endDate", "render": function (data, type, row) {
+                            if (type === "sort" || type === "type") {
+                                return data;
+                            }
+                            if (data) {
+                                return moment(data).format("MMM-DD-YYYY");
+                            }
+                            return ""
+                        }
+                    },
+                    { "data": "netAmount" },
+                    { "data": "amount" },
+                    {"data": "id"}
+                ]
+
+                  , "columnDefs": [
+                      { targets: 'no-sort', orderable: false },
+                      {
+                        targets: 5, render: function (data) {
+                            return '<button  type="button" disabled data-id="' + data + '"  class="btn btn-success EditEmployee">Edit</button>' +
+                                    "&nbsp; &nbsp;" +
+                                '<button  type="button"  disabled data-id="' + data + '"  class="btn btn-danger removeEmployee">Delete</button>'
+
+                        }
+                      }
+                ]
+            });
+        });
+
+    </script>
+}

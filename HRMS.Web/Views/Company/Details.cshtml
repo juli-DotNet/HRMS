@@ -1,0 +1,161 @@
+﻿@model HRMS.Web.Models.CompanyViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<partial name="_header" />
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NIPT)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NIPT)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class=" btn btn-primary">Edit </a>
+</div>
+
+
+<div class="list-header"></div>
+<div class="row">
+    <div class="col-md-11">
+        <h3 class="d-inline">Sites of Company </h3>
+    </div>
+    <div class="col-md-1">
+        <a asp-action="Index" asp-controller="CompanySite" asp-route-companyId="@Model.Id" class="btn btn-success">List</a>
+    </div>
+</div>
+<hr />
+<div class="list-header"></div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table display">
+            <thead>
+                <tr>
+                    <th>
+                        Site
+                    </th>
+                    <th>
+                        Country
+                    </th>
+                    <th>
+                        Region
+                    </th>
+                    <th>
+                        City
+                    </th>
+                    <th>
+                        Postal Code
+                    </th>
+                    <th class="no-sort">Actions</th>
+                </tr>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<div class="list-header"></div>
+<div class="row">
+    <div class="col-md-11">
+        <h3 class="d-inline">Organigram of Company </h3>
+    </div>
+    <div class="col-md-1">
+        <a asp-action="Index" asp-controller="Organigram" asp-route-companyId="@Model.Id" class="btn btn-success">List</a>
+    </div>
+</div>
+<hr />
+<div class="list-header"></div>
+<div class="row">
+    <div class="col-md-12">
+        <div id="chart-container"></div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(function () {
+            var table = $(".table").DataTable({
+                ajax: {
+                    url: "@Url.Action("LinkedSites","Company",new { id=Model.Id})",
+                    dataSrc: 'items'
+                },
+                "columns": [
+                    { "data": "name" },
+                    { "data": "country" },
+                    { "data": "region" },
+                    { "data": "city" },
+                    { "data": "postalCode" },
+                    { "data": "id" }
+                ],
+                "columnDefs":
+                    [
+                        { targets: 'no-sort', orderable: false },
+                        {
+                            targets: 5, render: function (data) {
+                                    return '<button  type="button" data-site-id="' + data + '"  class="btn btn-primary detailSite">Details</button>' + " " + '<button  type="button" data-site-id="' + data + '"  class="btn btn-danger removeLinkedSite" disabled>Remove Site</button>'
+                                
+                            }
+                        }
+                    ]
+            });
+        });
+    </script>
+
+
+    <link rel="stylesheet" href="~/css/font-awesome.css">
+    <link rel="stylesheet" href="~/css/jquery.orgchart.css">
+
+    <script src="~/js/html2canvas.js"></script>
+    <script src="~/js/jquery.orgchart.js"></script>
+    <script>
+        $(function () {
+
+        $(".table").on("click", ".detailSite", function (e) {
+                var siteId = $(this).attr("data-site-id");
+                console.log(siteId);
+
+                window.location.href = '@Url.Action("Details", "CompanySite")' + "?id=" + siteId;
+            });
+
+             $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("GetCompanyOrganigrams", "Json",new { companyId=Model.Id})",
+                        success: function (data) {
+                            console.log(data);
+                                 $('#chart-container').orgchart({
+                                    'data': data.items[0],
+                                    'nodeTitle': 'title',
+                                    'nodeContent': 'name'
+                            });
+                        }
+                    });
+
+        });
+
+    </script>
+}
+
+
+

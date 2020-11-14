@@ -1,0 +1,76 @@
+﻿@model HRMS.Web.Models.CompanyDepartmentViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<partial name="_header" />
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Company)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Company)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Department)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Department)
+        </dd>
+    </dl>
+</div>
+
+<div class="list-header"></div>
+<div class="row">
+    <div class="col-md-11">
+        <h3 class="d-inline">Organigram of Company </h3>
+    </div>
+    <div class="col-md-1">
+        <a asp-action="Index" asp-controller="Organigram" asp-route-companyId="@Model.CompanyId" class="btn btn-success">List</a>
+    </div>
+</div>
+<hr />
+<div class="list-header"></div>
+<div class="row">
+    <div class="col-md-12">
+        <div id="chart-container"></div>
+
+    </div>
+</div>
+
+@section Scripts{
+
+
+
+    <link rel="stylesheet" href="~/css/font-awesome.css">
+    <link rel="stylesheet" href="~/css/jquery.orgchart.css">
+
+    <script src="~/js/html2canvas.js"></script>
+    <script src="~/js/jquery.orgchart.js"></script>
+    <script>
+        $(function () {
+            
+
+             $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("GetCompanyDepartmentOrganigrams", "Json",new { companyDeparmentId=Model.Id})",
+                        success: function (data) {
+                            console.log(data);
+                                 $('#chart-container').orgchart({
+                                    'data': data.items[0],
+                                    'nodeTitle': 'title',
+                                    'nodeContent': 'name'
+                            });
+                        }
+                    });
+
+        });
+
+    </script>
+}
+
+
+

@@ -18,7 +18,7 @@ namespace HRMS.Persistance
 
         public IRepository<Company> Company => new Repository<Company>(_context);
 
-        public IRepository<CompanySite> CompanySite => new Repository<CompanySite>(_context);
+        public IRepository<CompanyDepartament> CompanyDepartament => new Repository<CompanyDepartament>(_context);
 
         public IRepository<Country> Country => new Repository<Country>(_context);
 
@@ -30,7 +30,15 @@ namespace HRMS.Persistance
 
         public IRepository<Region> Region => new Repository<Region>(_context);
 
-        public IRepository<Site> Site => new Repository<Site>(_context);
+        public IRepository<Departament> Departament => new Repository<Departament>(_context);
+
+        public IRepository<CompanyPayroll> CompanyPayroll => new Repository<CompanyPayroll>(_context);
+
+        public IRepository<EmployeeCompanyPayroll> EmployeeCompanyPayroll => new Repository<EmployeeCompanyPayroll>(_context);
+
+        public IRepository<PayrollSeason> PayrollSeason => new Repository<PayrollSeason>(_context);
+
+        public IRepository<PayrollSegment> PayrollSegment => new Repository<PayrollSegment>(_context);
 
         public async Task SaveChangesAsync()
         {

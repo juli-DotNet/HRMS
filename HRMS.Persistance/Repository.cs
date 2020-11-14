@@ -1,6 +1,7 @@
 ﻿using HRMS.Core.Model;
 using HRMS.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace HRMS.Persistance
         {
             obj.CreatedOn = DateTime.Now;
             obj.IsValid = true;
-             await dbSet.AddAsync(obj);
+            await dbSet.AddAsync(obj);
         }
         public IQueryable<T> Where(Expression<Func<T, bool>> predicate)
         {
@@ -42,7 +43,7 @@ namespace HRMS.Persistance
         {
             return await this.dbSet.Where(predicate).ToListAsync();
         }
-       
+
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
         {
             return await this.dbSet.AnyAsync(predicate);
@@ -64,9 +65,43 @@ namespace HRMS.Persistance
             return Task.CompletedTask;
         }
 
-        //public async Task<List<T>> WhereAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, TProperty>> navigation)
-        //{
-        //    return await this.dbSet.Include(navigation).Where(predicate).ToListAsync();
-        //}
+        public async Task<List<T>> WhereAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
+        {
+            IIncludableQueryable<T, object> query = null;
+
+            if (includes.Length > 0)
+            {
+                query = dbSet.Include(includes[0]);
+            }
+            for (int queryIndex = 1; queryIndex < includes.Length; ++queryIndex)
+            {
+                query = query.Include(includes[queryIndex]);
+            }
+            if (query is null)
+            {
+                return await dbSet.AsNoTracking().Where(predicate).ToListAsync();
+            }
+
+            return await query.AsNoTracking().Where(predicate).ToListAsync();
+        }
+
+        public async Task<T> FirstOrDefault(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
+        {
+            IIncludableQueryable<T, object> query = null;
+
+            if (includes.Length > 0)
+            {
+                query = dbSet.Include(includes[0]);
+            }
+            for (int queryIndex = 1; queryIndex < includes.Length; ++queryIndex)
+            {
+                query = query.Include(includes[queryIndex]);
+            }
+            if (query is null)
+            {
+                return await dbSet.FirstOrDefaultAsync(predicate);
+            }
+            return await query.FirstOrDefaultAsync(predicate);
+        }
     }
 }
