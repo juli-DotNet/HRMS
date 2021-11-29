@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRMS.Web", "HRMS.Web\HRMS.W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRMS.Core", "HRMS.Core\HRMS.Core.csproj", "{561BC76B-741F-41A0-A927-0C2C47C8C82F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRMS.Persistance", "HRMS.Persistance\HRMS.Persistance.csproj", "{E1264D73-A1E3-48AD-977D-5F68F640158F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRMS.Persostance.Psql", "HRMS.Persostance.Psql\HRMS.Persostance.Psql.csproj", "{A3FA414D-0A7A-4B9E-8076-43BBE0DE9119}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{561BC76B-741F-41A0-A927-0C2C47C8C82F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{561BC76B-741F-41A0-A927-0C2C47C8C82F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{561BC76B-741F-41A0-A927-0C2C47C8C82F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E1264D73-A1E3-48AD-977D-5F68F640158F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E1264D73-A1E3-48AD-977D-5F68F640158F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E1264D73-A1E3-48AD-977D-5F68F640158F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E1264D73-A1E3-48AD-977D-5F68F640158F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3FA414D-0A7A-4B9E-8076-43BBE0DE9119}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3FA414D-0A7A-4B9E-8076-43BBE0DE9119}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3FA414D-0A7A-4B9E-8076-43BBE0DE9119}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3FA414D-0A7A-4B9E-8076-43BBE0DE9119}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
