@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using HRMS.Core.Services.Interfaces;
-using HRMS.Persostance.Psql;
+using HRMS.Persistance.Psql;
 using HRMS.Core.Services;
 
 namespace HRMS.Web
@@ -37,7 +37,7 @@ namespace HRMS.Web
 
             #region SQL SERVER
 
-            // services.AddDbContext<HRMS.Persostance.Psql.HRMSContext>(options =>
+            // services.AddDbContext<HRMS.Persistance.Psql.HRMSContext>(options =>
             //    options.UseSqlServer(
             //        Configuration.GetConnectionString("DefaultConnection"),
             //         x => x.MigrationsAssembly("HRMS.Persistance")

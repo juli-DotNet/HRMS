@@ -2,7 +2,7 @@
 using HRMS.Core.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace HRMS.Persostance.Psql
+namespace HRMS.Persistance.Psql
 {
     public class HRMSContext : DbContext
     {

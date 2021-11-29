@@ -8,7 +8,7 @@ using HRMS.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace HRMS.Persostance.Psql;
+namespace HRMS.Persistance.Psql;
 
 public class Repository<T> : IRepository<T> where T : BaseEntity
 {

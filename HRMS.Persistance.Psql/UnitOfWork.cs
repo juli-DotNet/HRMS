@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using HRMS.Core.Model;
 using HRMS.Core.Services.Interfaces;
-namespace HRMS.Persostance.Psql;
+namespace HRMS.Persistance.Psql;
 
 public class UnitOfWork : IUniOfWork
 {

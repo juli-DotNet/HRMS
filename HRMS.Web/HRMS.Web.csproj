@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HRMS.Core\HRMS.Core.csproj" />
-    <ProjectReference Include="..\HRMS.Persostance.Psql\HRMS.Persostance.Psql.csproj" />
+    <ProjectReference Include="..\HRMS.Persistance.Psql\HRMS.Persistance.Psql.csproj" />
   </ItemGroup>
 
 

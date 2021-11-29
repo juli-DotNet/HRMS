@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRMS.Web", "HRMS.Web\HRMS.W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRMS.Core", "HRMS.Core\HRMS.Core.csproj", "{561BC76B-741F-41A0-A927-0C2C47C8C82F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRMS.Persostance.Psql", "HRMS.Persostance.Psql\HRMS.Persostance.Psql.csproj", "{A3FA414D-0A7A-4B9E-8076-43BBE0DE9119}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRMS.Persistance.Psql", "HRMS.Persistance.Psql\HRMS.Persistance.Psql.csproj", "{A3FA414D-0A7A-4B9E-8076-43BBE0DE9119}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
